@@ -5,7 +5,7 @@
 /**
  * WP SMS <https://wordpress.org/plugins/wp-sms/>
  */
-class GFHANNANSMS_Pro_WP_SMS {
+class GFMSMSSMS_Pro_WP_SMS {
 
 	public static function construct() {
 
@@ -105,14 +105,14 @@ class GFHANNANSMS_Pro_WP_SMS {
 
 
 	public static function js() {
-		$settings = GFHANNANSMS_Pro::get_option();
+		$settings = GFMSMSSMS_Pro::get_option();
 		?>
         <script type='text/javascript'>
             if (typeof fieldSettings != 'undefined') {
                 fieldSettings["sms_subscribtion"] = ".enable_enhanced_ui_setting , .size_setting, .label_placement_setting, .prepopulate_field_setting,.error_message_setting, .conditional_logic_field_setting, .label_setting, .admin_label_setting,.rules_setting, .visibility_setting, .description_setting, .css_class_setting, .wp_sms_subscribtion_setting";
             }
 
-            function wp_sms_hannanstd(type) {
+            function wp_sms_msmsstd(type) {
                 if (type == 'unsubscribe') {
                     jQuery("#wp_sms_subs_unsubs").prop("checked", true);
                     jQuery(".field_wp_sms_name").hide("slow");
@@ -251,9 +251,9 @@ class GFHANNANSMS_Pro_WP_SMS {
             }
 
             jQuery(document).bind("gform_load_field_settings", function (event, field, form) {
-                wp_sms_hannanstd(field.wp_sms_subs);
+                wp_sms_msmsstd(field.wp_sms_subs);
                 jQuery('input[name="wp_sms_subs"]').on("click", function () {
-                    wp_sms_hannanstd(jQuery('input[name="wp_sms_subs"]:checked').val());
+                    wp_sms_msmsstd(jQuery('input[name="wp_sms_subs"]:checked').val());
                 });
             });
 
@@ -747,7 +747,7 @@ class GFHANNANSMS_Pro_WP_SMS {
 				$mobile = str_replace( '.', '_', $mobile );
 				$mobile = "input_{$mobile}";
 				$mobile = ! rgempty( $mobile ) ? sanitize_text_field( rgpost( $mobile ) ) : '';
-				$mobile = GFHANNANSMS_Form_Send::change_mobile_separately( $mobile, self::country_code( $field ) );
+				$mobile = GFMSMSSMS_Form_Send::change_mobile_separately( $mobile, self::country_code( $field ) );
 
 				global $wpdb, $table_prefix;
 				$mobile_exist = $wpdb->query( $wpdb->prepare( "SELECT * FROM {$table_prefix}sms_subscribes WHERE mobile = %s", $mobile ) );
@@ -793,7 +793,7 @@ class GFHANNANSMS_Pro_WP_SMS {
 			$mobile = str_replace( '.', '_', $mobile );
 			$mobile = "input_{$mobile}";
 			$mobile = ! rgempty( $mobile ) ? sanitize_text_field( rgpost( $mobile ) ) : '';
-			$mobile = GFHANNANSMS_Form_Send::change_mobile_separately( $mobile, self::country_code( $field ) );
+			$mobile = GFMSMSSMS_Form_Send::change_mobile_separately( $mobile, self::country_code( $field ) );
 
 			if ( rgar( $field, 'wp_sms_group_select' ) == 'force' ) {
 				$groups = rgar( $field, 'wp_sms_group_forced' );
@@ -831,7 +831,7 @@ class GFHANNANSMS_Pro_WP_SMS {
 					//$template_vars = array( 'subscribe_name' => $name, 'subscribe_mobile' => $mobile );
 					$final_message = preg_replace( '/%(.*?)%/ime', "\$template_vars['$1']", $string );
 
-					GFHANNANSMS_Form_Send::Send( $mobile, $final_message, $from = '', $form['id'], '', '' );
+					GFMSMSSMS_Form_Send::Send( $mobile, $final_message, $from = '', $form['id'], '', '' );
 
 				}
 			}

@@ -3,9 +3,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-add_filter( 'gform_tooltips', array( 'GFHANNANSMS_Pro_Settings', 'tooltips' ) );
+add_filter( 'gform_tooltips', array( 'GFMSMSSMS_Pro_Settings', 'tooltips' ) );
 
-class GFHANNANSMS_Pro_Settings {
+class GFMSMSSMS_Pro_Settings {
 
 	protected static function check_access( $required_permission ) {
 		if ( ! function_exists( 'wp_get_current_user' ) ) {
@@ -33,33 +33,33 @@ class GFHANNANSMS_Pro_Settings {
 		wp_enqueue_script('GF_SMS_Chosen', GF_SMS_URL . '/assets/chosen_v1.8.5/chosen.jquery.min.js', array(), true);
 		wp_enqueue_style('GF_SMS_Chosen', GF_SMS_URL . '/assets/chosen_v1.8.5/chosen.min.css');
 
-		$settings = GFHANNANSMS_Pro::get_option();
+		$settings = GFMSMSSMS_Pro::get_option();
 
 		$G_code = rgget( 'gateway' ) ? rgget( 'gateway' ) : ( ! empty( $settings["ws"] ) ? $settings["ws"] : '' );
 		$G_code = strtolower( $G_code );
 
-		$gateway_options = get_option( "gf_hannansms_" . $G_code );
+		$gateway_options = get_option( "gf_msmssms_" . $G_code );
 
 		if ( ! rgempty( "uninstall" ) ) {
 
-			check_admin_referer( "uninstall", "gf_hannansms_uninstall" );
+			check_admin_referer( "uninstall", "gf_msmssms_uninstall" );
 
-			if ( ! self::check_access( "gravityforms_hannansms_uninstall" ) ) {
+			if ( ! self::check_access( "gravityforms_msmssms_uninstall" ) ) {
 				die( __( "You don't have adequate permission to uninstall Gravity SMS Pro.", "GF_SMS" ) );
 			} else {
 
-				GFHANNANSMS_Pro_SQL::drop_table();
+				GFMSMSSMS_Pro_SQL::drop_table();
 
 				delete_option( "gf_sms_settings" );
 				delete_option( "gf_sms_version" );
 				delete_option( "gf_sms_installed" );
 				delete_option( "gf_sms_last_sender" );
 
-				foreach ( (array) GFHANNANSMS_Pro_WebServices::get() as $code => $name ) {
-					delete_option( "gf_hannansms_" . strtolower( $code ) );
+				foreach ( (array) GFMSMSSMS_Pro_WebServices::get() as $code => $name ) {
+					delete_option( "gf_msmssms_" . strtolower( $code ) );
 				}
 
-				$plugin = GF_SMS_DIR . "/gravity_sms_pro.php";
+				$plugin = GF_SMS_DIR . "/ippanel_sms_pro_gv.php";
 
 				update_option( 'recently_activated', array( $plugin => time() ) + (array) get_option( 'recently_activated' ) );
 
@@ -76,37 +76,37 @@ class GFHANNANSMS_Pro_Settings {
 			}
 
 			return false;
-		} else if ( ! rgempty( "gf_hannansms_submit" ) ) {
+		} else if ( ! rgempty( "gf_msmssms_submit" ) ) {
 
-			check_admin_referer( "update", "gf_hannansms_update" );
+			check_admin_referer( "update", "gf_msmssms_update" );
 
 			$settings = array(
-				"user_name"    => rgpost( "gf_hannansms_user_name" ),
-				"password"     => rgpost( "gf_hannansms_password" ),
-				"from"         => rgpost( "gf_hannansms_from" ),
-				"code"         => rgpost( "gf_hannansms_code" ),
-				"to"           => rgpost( "gf_hannansms_to" ),
-				"ws"           => rgpost( "gf_hannansms_ws" ),
-				"cr"           => rgpost( "gf_hannansms_showcr" ),
-				"menu"         => rgpost( "gf_hannansms_menu" ),
-				"sidebar_ajax" => rgpost( "gf_hannansms_sidebar_ajax" )
+				"user_name"    => rgpost( "gf_msmssms_user_name" ),
+				"password"     => rgpost( "gf_msmssms_password" ),
+				"from"         => rgpost( "gf_msmssms_from" ),
+				"code"         => rgpost( "gf_msmssms_code" ),
+				"to"           => rgpost( "gf_msmssms_to" ),
+				"ws"           => rgpost( "gf_msmssms_ws" ),
+				"cr"           => rgpost( "gf_msmssms_showcr" ),
+				"menu"         => rgpost( "gf_msmssms_menu" ),
+				"sidebar_ajax" => rgpost( "gf_msmssms_sidebar_ajax" )
 			);
 
 			update_option( "gf_sms_settings", array_map( 'sanitize_text_field', $settings ) );
 
-			if ( rgpost( "gf_hannansms_ws" ) && rgpost( "gf_hannansms_ws" ) != 'no' ) {
+			if ( rgpost( "gf_msmssms_ws" ) && rgpost( "gf_msmssms_ws" ) != 'no' ) {
 
-				$Saved_Gateway = 'GFHANNANSMS_Pro_' . strtoupper( sanitize_text_field( rgpost( "gf_hannansms_ws" ) ) );
+				$Saved_Gateway = 'GFMSMSSMS_Pro_' . strtoupper( sanitize_text_field( rgpost( "gf_msmssms_ws" ) ) );
 
 				if ( class_exists( $Saved_Gateway ) && method_exists( $Saved_Gateway, 'options' ) ) {
 
 					$gateway_options = array();
 
 					foreach ( (array) $Saved_Gateway::options() as $option => $name ) {
-						$gateway_options[ $option ] = sanitize_text_field( rgpost( "gf_hannansms_" . strtolower( sanitize_text_field( rgpost( "gf_hannansms_ws" ) ) ) . '_' . $option ) );
+						$gateway_options[ $option ] = sanitize_text_field( rgpost( "gf_msmssms_" . strtolower( sanitize_text_field( rgpost( "gf_msmssms_ws" ) ) ) . '_' . $option ) );
 					}
 
-					update_option( "gf_hannansms_" . strtolower( sanitize_text_field( rgpost( "gf_hannansms_ws" ) ) ), $gateway_options );
+					update_option( "gf_msmssms_" . strtolower( sanitize_text_field( rgpost( "gf_msmssms_ws" ) ) ), $gateway_options );
 				}
 			}
 
@@ -123,7 +123,7 @@ class GFHANNANSMS_Pro_Settings {
 
         <form method="post" action="">
 
-			<?php wp_nonce_field( "update", "gf_hannansms_update" ) ?>
+			<?php wp_nonce_field( "update", "gf_msmssms_update" ) ?>
 
             <h3><span><i
                             class="fa fa fa-mobile"></i><?php echo '   ' . __( "Gravity SMS Pro settings", "GF_SMS" ) . '   '; ?></span>
@@ -132,12 +132,12 @@ class GFHANNANSMS_Pro_Settings {
 			<?php
 			if ( ! empty( $G_code ) && $G_code != 'no' ) {
 
-				if ( $G_code == strtolower( $settings["ws"] ) && $credit = GFHANNANSMS_Pro::credit( true ) ) {
+				if ( $G_code == strtolower( $settings["ws"] ) && $credit = GFMSMSSMS_Pro::credit( true ) ) {
 
 					preg_match( '/([\d]+)/', $credit, $match );
 					$credit_int = isset( $match[0] ) ? $match[0] : $credit;
 
-					$range = GFHANNANSMS_Pro::range();
+					$range = GFMSMSSMS_Pro::range();
 
 					$max = isset( $range["max"] ) ? $range["max"] : 500;
 					$min = isset( $range["min"] ) ? $range["min"] : 2;
@@ -165,14 +165,14 @@ class GFHANNANSMS_Pro_Settings {
             <table class="form-table">
 
                 <tr>
-                    <th scope="row"><label for="gf_hannansms_ws"><?php _e( "SMS Gateway", "GF_SMS" ); ?></label></th>
+                    <th scope="row"><label for="gf_msmssms_ws"><?php _e( "SMS Gateway", "GF_SMS" ); ?></label></th>
 
                     <td width="340">
-                        <select id="gf_hannansms_ws" name="gf_hannansms_ws" style="width:100%;"
+                        <select id="gf_msmssms_ws" name="gf_msmssms_ws" style="width:100%;"
                                 class="select-gateway<?php echo is_rtl() ? " chosen-rtl" : ""; ?>"
                                 onchange="GF_SwitchGateway(jQuery(this).val());">
 
-							<?php foreach ( (array) GFHANNANSMS_Pro_WebServices::get() as $code => $name ) { ?>
+							<?php foreach ( (array) GFMSMSSMS_Pro_WebServices::get() as $code => $name ) { ?>
 
                                 <option style="padding:3px"
                                         value="<?php echo $code ?>" <?php echo esc_attr( $G_code ) == $code ? "selected='selected'" : "" ?>><?php echo $name ?></option>
@@ -191,7 +191,7 @@ class GFHANNANSMS_Pro_Settings {
 
 				if ( ! empty( $G_code ) && $G_code != 'no' ) {
 
-					$Gateway = 'GFHANNANSMS_Pro_' . strtoupper( $G_code );
+					$Gateway = 'GFMSMSSMS_Pro_' . strtoupper( $G_code );
 
 					if ( class_exists( $Gateway ) && method_exists( $Gateway, 'options' ) ) {
 
@@ -200,11 +200,11 @@ class GFHANNANSMS_Pro_Settings {
 						foreach ( (array) $Gateway::options() as $option => $name ) { ?>
                             <tr>
                                 <th scope="row"><label
-                                            for="gf_hannansms_<?php echo $G_code . '_' . $option; ?>"><?php echo $name; ?></label>
+                                            for="gf_msmssms_<?php echo $G_code . '_' . $option; ?>"><?php echo $name; ?></label>
                                 </th>
                                 <td width="340">
-                                    <input type="text" id="gf_hannansms_<?php echo $G_code . '_' . $option; ?>"
-                                           name="gf_hannansms_<?php echo $G_code . '_' . $option; ?>"
+                                    <input type="text" id="gf_msmssms_<?php echo $G_code . '_' . $option; ?>"
+                                           name="gf_msmssms_<?php echo $G_code . '_' . $option; ?>"
                                            value="<?php echo esc_attr( $gateway_options[ $option ] ) ?>" size="50"
                                            style="padding: 5px; direction:ltr !important;text-align:left;"/>
                                 </td>
@@ -218,7 +218,7 @@ class GFHANNANSMS_Pro_Settings {
 
                 <tr>
                     <th scope="row">
-                        <label for="gf_hannansms_from">
+                        <label for="gf_msmssms_from">
 							<?php _e( "Sender (From)", "GF_SMS" ); ?>
 							<?php gform_tooltip( 'gf_sms_sender' ) ?>
                         </label>
@@ -226,7 +226,7 @@ class GFHANNANSMS_Pro_Settings {
                     </th>
                     <td width="340">
 
-                        <input type="text" id="gf_hannansms_from" name="gf_hannansms_from"
+                        <input type="text" id="gf_msmssms_from" name="gf_msmssms_from"
                                value="<?php echo esc_attr( $settings["from"] ) ?>" size="50"
                                style="padding: 5px; direction:ltr !important;text-align:left;"/><br/>
                     </td>
@@ -235,14 +235,14 @@ class GFHANNANSMS_Pro_Settings {
 
                 <tr>
                     <th scope="row">
-                        <label for="gf_hannansms_code">
+                        <label for="gf_msmssms_code">
 							<?php _e( "Your Default Country Code", "GF_SMS" ); ?>
 							<?php gform_tooltip( 'country_code' ) ?>
                         </label>
                     </th>
                     <td width="340">
 
-                        <input type="text" id="gf_hannansms_code" name="gf_hannansms_code"
+                        <input type="text" id="gf_msmssms_code" name="gf_msmssms_code"
                                value="<?php echo esc_attr( $settings["code"] ) ?>" size="50"
                                style="padding: 5px; direction:ltr !important;text-align:left;"/><br/>
 
@@ -252,14 +252,14 @@ class GFHANNANSMS_Pro_Settings {
 
                <!-- <tr>
                     <th scope="row">
-                        <label for="gf_hannansms_to">
+                        <label for="gf_msmssms_to">
 							<?php /*_e( "Admin Default Numbers", "GF_SMS" ); */?>
 							<?php /*gform_tooltip( 'admin_default' ) */?>
                         </label>
                     </th>
                     <td width="340">
 
-                        <input type="text" id="gf_hannansms_to" name="gf_hannansms_to"
+                        <input type="text" id="gf_msmssms_to" name="gf_msmssms_to"
                                value="<?php /*echo esc_attr( $settings["to"] ) */?>" size="50"
                                style="padding: 5px; direction:ltr !important;text-align:left;"/><br/>
 
@@ -270,7 +270,7 @@ class GFHANNANSMS_Pro_Settings {
 
                     <tr>
                         <th scope="row">
-                            <label for="gf_hannansms_showcr">
+                            <label for="gf_msmssms_showcr">
 								<?php _e( "Show Credit/Balance", "GF_SMS" ); ?>
 								<?php gform_tooltip( 'show_credit' ) ?>
                             </label>
@@ -278,15 +278,15 @@ class GFHANNANSMS_Pro_Settings {
                         <td width="340">
 
 
-                            <input type="radio" name="gf_hannansms_showcr" id="gf_hannansms_showcr_show"
+                            <input type="radio" name="gf_msmssms_showcr" id="gf_msmssms_showcr_show"
                                    value="Show" <?php echo esc_attr( $settings["cr"] ) == "Show" ? "checked='checked'" : "" ?>/>
                             <label class="inline"
-                                   for="gf_hannansms_showcr_show"><?php _e( "Yes", "GF_SMS" ); ?></label>&nbsp;&nbsp;&nbsp;
+                                   for="gf_msmssms_showcr_show"><?php _e( "Yes", "GF_SMS" ); ?></label>&nbsp;&nbsp;&nbsp;
 
-                            <input type="radio" name="gf_hannansms_showcr" id="gf_hannansms_showcr_no"
+                            <input type="radio" name="gf_msmssms_showcr" id="gf_msmssms_showcr_no"
                                    value="No" <?php echo esc_attr( $settings["cr"] ) != "Show" ? "checked='checked'" : "" ?>/>
                             <label class="inline"
-                                   for="gf_hannansms_showcr_no"><?php _e( "No ( Recommended )", "GF_SMS" ); ?></label>
+                                   for="gf_msmssms_showcr_no"><?php _e( "No ( Recommended )", "GF_SMS" ); ?></label>
 
                             <br/>
 
@@ -298,7 +298,7 @@ class GFHANNANSMS_Pro_Settings {
 
                 <tr>
                     <th scope="row">
-                        <label for="gf_hannansms_menu">
+                        <label for="gf_msmssms_menu">
 							<?php _e( "Admin Bar Menu", "GF_SMS" ); ?>
 							<?php gform_tooltip( 'show_adminbar' ) ?>
                         </label>
@@ -306,14 +306,14 @@ class GFHANNANSMS_Pro_Settings {
                     <td width="340">
 
 
-                        <input type="radio" name="gf_hannansms_menu" id="gf_hannansms_menu_show"
+                        <input type="radio" name="gf_msmssms_menu" id="gf_msmssms_menu_show"
                                value="Show" <?php echo esc_attr( $settings["menu"] ) == "Show" ? "checked='checked'" : "" ?>/>
-                        <label class="inline" for="gf_hannansms_menu_show"><?php _e( "Yes", "GF_SMS" ); ?></label>&nbsp;&nbsp;&nbsp;
+                        <label class="inline" for="gf_msmssms_menu_show"><?php _e( "Yes", "GF_SMS" ); ?></label>&nbsp;&nbsp;&nbsp;
 
 
-                        <input type="radio" name="gf_hannansms_menu" id="gf_hannansms_menu_no"
+                        <input type="radio" name="gf_msmssms_menu" id="gf_msmssms_menu_no"
                                value="No" <?php echo esc_attr( $settings["menu"] ) != "Show" ? "checked='checked'" : "" ?>/>
-                        <label class="inline" for="gf_hannansms_menu_no"><?php _e( "No", "GF_SMS" ); ?></label>
+                        <label class="inline" for="gf_msmssms_menu_no"><?php _e( "No", "GF_SMS" ); ?></label>
 
                         <br/>
 
@@ -323,7 +323,7 @@ class GFHANNANSMS_Pro_Settings {
 
                 <tr>
                     <th scope="row">
-                        <label for="gf_hannansms_sidebar_ajax">
+                        <label for="gf_msmssms_sidebar_ajax">
 							<?php _e( "Replace merge tags value in SMS Sidebar", "GF_SMS" ); ?>
 							<?php gform_tooltip( 'sidebar_ajax' ) ?>
                         </label>
@@ -331,14 +331,14 @@ class GFHANNANSMS_Pro_Settings {
                     <td width="340">
 
 
-                        <input type="radio" name="gf_hannansms_sidebar_ajax" id="gf_hannansms_sidebar_ajax_Yes"
+                        <input type="radio" name="gf_msmssms_sidebar_ajax" id="gf_msmssms_sidebar_ajax_Yes"
                                value="Yes" <?php echo empty( $settings["sidebar_ajax"] ) || esc_attr( $settings["sidebar_ajax"] ) != "No" ? "checked='checked'" : "" ?>/>
                         <label class="inline"
-                               for="gf_hannansms_sidebar_ajax_Yes"><?php _e( "Yes", "GF_SMS" ); ?></label>&nbsp;&nbsp;&nbsp;
+                               for="gf_msmssms_sidebar_ajax_Yes"><?php _e( "Yes", "GF_SMS" ); ?></label>&nbsp;&nbsp;&nbsp;
 
-                        <input type="radio" name="gf_hannansms_sidebar_ajax" id="gf_hannansms_sidebar_ajax_no"
+                        <input type="radio" name="gf_msmssms_sidebar_ajax" id="gf_msmssms_sidebar_ajax_no"
                                value="No" <?php echo ! empty( $settings["sidebar_ajax"] ) && esc_attr( $settings["sidebar_ajax"] ) == "No" ? "checked='checked'" : "" ?>/>
-                        <label class="inline" for="gf_hannansms_sidebar_ajax_no"><?php _e( "No", "GF_SMS" ); ?></label>
+                        <label class="inline" for="gf_msmssms_sidebar_ajax_no"><?php _e( "No", "GF_SMS" ); ?></label>
 
                         <br/>
 
@@ -348,7 +348,7 @@ class GFHANNANSMS_Pro_Settings {
 
                 <tr>
                     <th scope="row">
-                        <input type="submit" name="gf_hannansms_submit" class="button-primary"
+                        <input type="submit" name="gf_msmssms_submit" class="button-primary"
                                value="<?php _e( "Save Settings", "GF_SMS" ) ?>"/>
                     </th>
                 </tr>
@@ -358,8 +358,8 @@ class GFHANNANSMS_Pro_Settings {
 
         </form>
         <form action="" method="post">
-			<?php wp_nonce_field( "uninstall", "gf_hannansms_uninstall" ) ?>
-			<?php if ( self::check_access( "gravityforms_hannansms_uninstall" ) ) { ?>
+			<?php wp_nonce_field( "uninstall", "gf_msmssms_uninstall" ) ?>
+			<?php if ( self::check_access( "gravityforms_msmssms_uninstall" ) ) { ?>
 
                 <div class="hr-divider"></div>
                 <div class="delete-alert alert_red">
@@ -402,7 +402,7 @@ if ( defined( 'GF_SMS_GATEWAY' ) ) {
 
 				include 'gateways/' . $path_parts['filename'] . '.php';
 
-				$Gateway = 'GFHANNANSMS_Pro_' . strtoupper( $path_parts['filename'] );
+				$Gateway = 'GFMSMSSMS_Pro_' . strtoupper( $path_parts['filename'] );
 
 				if ( class_exists( $Gateway ) ) {
 					if ( method_exists( $Gateway, 'options' ) && method_exists( $Gateway, 'process' ) && method_exists( $Gateway, 'name' ) ) {

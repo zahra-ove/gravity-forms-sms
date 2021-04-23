@@ -2,7 +2,7 @@
 	exit;
 }
 
-class GFHANNANSMS_Pro {
+class GFMSMSSMS_Pro {
 
 	public static $version = '2.3.0';
 	public static $gf_version = '1.9.10';
@@ -23,38 +23,38 @@ class GFHANNANSMS_Pro {
 			return false;
 		}
 
-		if ( is_admin() && ! self::check_access( 'gravityforms_hannansms' ) ) {
+		if ( is_admin() && ! self::check_access( 'gravityforms_msmssms' ) ) {
 			return false;
 		}
 
-		if ( ! class_exists( 'GFHANNANSMS_Pro_WebServices' ) ) {
+		if ( ! class_exists( 'GFMSMSSMS_Pro_WebServices' ) ) {
 			require_once( GF_SMS_DIR . 'includes/gateways.php' );
 		}
 
-		if ( ! class_exists( 'GFHANNANSMS_Pro_SQL' ) ) {
+		if ( ! class_exists( 'GFMSMSSMS_Pro_SQL' ) ) {
 			require_once( GF_SMS_DIR . 'includes/sql.php' );
 		}
-		GFHANNANSMS_Pro_SQL::setup_update();
+		GFMSMSSMS_Pro_SQL::setup_update();
 
-		if ( ! class_exists( 'GFHANNANSMS_Pro_Verification' ) ) {
+		if ( ! class_exists( 'GFMSMSSMS_Pro_Verification' ) ) {
 			require_once( GF_SMS_DIR . 'includes/verification.php' );
 		}
-		GFHANNANSMS_Pro_Verification::construct();
+		GFMSMSSMS_Pro_Verification::construct();
 
-		if ( ! class_exists( 'GFHANNANSMS_Pro_WP_SMS' ) ) {
+		if ( ! class_exists( 'GFMSMSSMS_Pro_WP_SMS' ) ) {
 			require_once( GF_SMS_DIR . 'includes/wp-sms-intergrate.php' );
 		}
-		GFHANNANSMS_Pro_WP_SMS::construct();
+		GFMSMSSMS_Pro_WP_SMS::construct();
 
-		if ( ! class_exists( 'GFHANNANSMS_Form_Send' ) ) {
+		if ( ! class_exists( 'GFMSMSSMS_Form_Send' ) ) {
 			require_once( GF_SMS_DIR . 'includes/send.php' );
 		}
-		GFHANNANSMS_Form_Send::construct();
+		GFMSMSSMS_Form_Send::construct();
 
-		if ( ! class_exists( 'GFHANNANSMS_Pro_Bulk' ) ) {
+		if ( ! class_exists( 'GFMSMSSMS_Pro_Bulk' ) ) {
 			require_once( GF_SMS_DIR . 'includes/bulk.php' );
 		}
-		GFHANNANSMS_Pro_Bulk::construct();
+		GFMSMSSMS_Pro_Bulk::construct();
 
 		if ( is_admin() ) {
 
@@ -73,33 +73,33 @@ class GFHANNANSMS_Pro {
 			add_action( 'admin_bar_menu', array( __CLASS__, 'admin_bar_menu' ), 2000 );
 			add_filter( 'gform_addon_navigation', array( __CLASS__, 'submenu' ) );
 
-			if ( ! class_exists( 'GFHANNANSMS_Pro_Settings' ) ) {
+			if ( ! class_exists( 'GFMSMSSMS_Pro_Settings' ) ) {
 				require_once( GF_SMS_DIR . 'includes/settings.php' );
 			}
 			RGForms::add_settings_page( array(
 					'name'      => 'gf_sms_pro',
 					'tab_label' => __( 'SMS Settings', 'GF_SMS' ),
 					'title'     => __( 'Gravityforms SMS Pro', 'GF_SMS' ),
-					'handler'   => array( 'GFHANNANSMS_Pro_Settings', 'settings' ),
+					'handler'   => array( 'GFMSMSSMS_Pro_Settings', 'settings' ),
 				)
 			);
 
-			if ( ! class_exists( 'GFHANNANSMS_Pro_Configurations' ) ) {
+			if ( ! class_exists( 'GFMSMSSMS_Pro_Configurations' ) ) {
 				require_once( GF_SMS_DIR . 'includes/configurations.php' );
 			}
-			GFHANNANSMS_Pro_Configurations::construct();
+			GFMSMSSMS_Pro_Configurations::construct();
 
-			if ( ! class_exists( 'GFHANNANSMS_Pro_Feeds' ) ) {
+			if ( ! class_exists( 'GFMSMSSMS_Pro_Feeds' ) ) {
 				require_once( GF_SMS_DIR . 'includes/feeds.php' );
 			}
-			GFHANNANSMS_Pro_Feeds::construct();
+			GFMSMSSMS_Pro_Feeds::construct();
 
-			if ( ! class_exists( 'GFHANNANSMS_Pro_Entries_Sidebar' ) ) {
+			if ( ! class_exists( 'GFMSMSSMS_Pro_Entries_Sidebar' ) ) {
 				require_once( GF_SMS_DIR . 'includes/sidebar.php' );
 			}
-			GFHANNANSMS_Pro_Entries_Sidebar::construct();
+			GFMSMSSMS_Pro_Entries_Sidebar::construct();
 
-			if ( ! class_exists( 'GFHANNANSMS_Pro_Sent' ) ) {
+			if ( ! class_exists( 'GFMSMSSMS_Pro_Sent' ) ) {
 				require_once( GF_SMS_DIR . 'includes/sent.php' );
 			}
 
@@ -111,8 +111,8 @@ class GFHANNANSMS_Pro {
 		$editable_roles = get_editable_roles();
 		foreach ( (array) $editable_roles as $role => $details ) {
 			if ( $role == 'administrator' || in_array( 'gravityforms_edit_forms', $details['capabilities'] ) ) {
-				$wp_roles->add_cap( $role, 'gravityforms_hannansms' );
-				$wp_roles->add_cap( $role, 'gravityforms_hannansms_uninstall' );
+				$wp_roles->add_cap( $role, 'gravityforms_msmssms' );
+				$wp_roles->add_cap( $role, 'gravityforms_msmssms_uninstall' );
 			}
 		}
 	}
@@ -126,7 +126,7 @@ class GFHANNANSMS_Pro {
 	}
 
 	public static function members_get_capabilities( $caps ) {
-		return array_merge( $caps, array( "gravityforms_hannansms", "gravityforms_hannansms_uninstall" ) );
+		return array_merge( $caps, array( "gravityforms_msmssms", "gravityforms_msmssms_uninstall" ) );
 	}
 
 	public static function deactive() {
@@ -134,10 +134,10 @@ class GFHANNANSMS_Pro {
 	}
 
 	public static function submenu( $submenus ) {
-		$permission = "gravityforms_hannansms";
+		$permission = "gravityforms_msmssms";
 		if ( ! empty( $permission ) ) {
 			$submenus[] = array(
-				"name"       => "gf_hannansms",
+				"name"       => "gf_msmssms",
 				"label"      => __( "SMS Notification", "GF_SMS" ),
 				"callback"   => array( __CLASS__, "pages" ),
 				"permission" => $permission
@@ -166,13 +166,13 @@ class GFHANNANSMS_Pro {
 	public static function pages() {
 		$view = rgget( "view" );
 		if ( $view == "edit" ) {
-			GFHANNANSMS_Pro_Configurations::configuration();
+			GFMSMSSMS_Pro_Configurations::configuration();
 		} else if ( $view == "send" ) {
-			GFHANNANSMS_Pro_Bulk::send_many_numbers();
+			GFMSMSSMS_Pro_Bulk::send_many_numbers();
 		} else if ( $view == "sent" ) {
-			GFHANNANSMS_Pro_Sent::table();
+			GFMSMSSMS_Pro_Sent::table();
 		} else {
-			GFHANNANSMS_Pro_Feeds::feeds( '' );
+			GFMSMSSMS_Pro_Feeds::feeds( '' );
 		}
 	}
 
@@ -210,28 +210,28 @@ class GFHANNANSMS_Pro {
 			'parent' => $menu_id,
 			'title'  => __( 'Feeds', 'GF_SMS' ),
 			'id'     => 'gf-sms-feeds',
-			'href'   => 'admin.php?page=gf_hannansms'
+			'href'   => 'admin.php?page=gf_msmssms'
 		) );
 		$wp_admin_bar->add_menu( array(
 			'parent' => $menu_id,
 			'title'  => __( 'New Feed', 'GF_SMS' ),
 			'id'     => 'gf-sms-new-feed',
-			'href'   => 'admin.php?page=gf_hannansms&view=edit&id=0'
+			'href'   => 'admin.php?page=gf_msmssms&view=edit&id=0'
 		) );
 		$wp_admin_bar->add_menu( array(
 			'parent' => $menu_id,
 			'title'  => __( 'Send Message', 'GF_SMS' ),
 			'id'     => 'gf-sms-send',
-			'href'   => 'admin.php?page=gf_hannansms&view=send'
+			'href'   => 'admin.php?page=gf_msmssms&view=send'
 		) );
 		$wp_admin_bar->add_menu( array(
 			'parent' => $menu_id,
 			'title'  => __( 'Sent Messages', 'GF_SMS' ),
 			'id'     => 'gf-sms-sent',
-			'href'   => 'admin.php?page=gf_hannansms&view=sent'
+			'href'   => 'admin.php?page=gf_msmssms&view=sent'
 		) );
 
-		$feeds = GFHANNANSMS_Pro_SQL::get_feeds();
+		$feeds = GFMSMSSMS_Pro_SQL::get_feeds();
 		if ( is_array( $feeds ) && sizeof( $feeds ) > 0 ) {
 			rsort( $feeds );
 			foreach ( (array) $feeds as $feed ) {
@@ -239,7 +239,7 @@ class GFHANNANSMS_Pro {
 					'parent' => 'gf-sms-feeds',
 					'title'  => __( 'Feed', 'GF_SMS' ) . ' ' . $feed['id'] . ' (' . $feed["form_title"] . ')',
 					'id'     => 'gf-sms-feed-' . $feed['id'],
-					'href'   => 'admin.php?page=gf_hannansms&view=edit&id=' . $feed['id']
+					'href'   => 'admin.php?page=gf_msmssms&view=edit&id=' . $feed['id']
 				) );
 			}
 		}
@@ -249,7 +249,7 @@ class GFHANNANSMS_Pro {
 	public static function range() {
 		$settings = self::get_option();
 
-		return GFHANNANSMS_Pro_WebServices::action( $settings, "range", '', '', '' );
+		return GFMSMSSMS_Pro_WebServices::action( $settings, "range", '', '', '' );
 	}
 
 	public static function credit( $update = false ) {
@@ -261,7 +261,7 @@ class GFHANNANSMS_Pro {
 		}
 
 		$settings            = self::get_option();
-		self::$stored_credit = GFHANNANSMS_Pro_WebServices::action( $settings, "credit", '', '', '' );
+		self::$stored_credit = GFMSMSSMS_Pro_WebServices::action( $settings, "credit", '', '', '' );
 
 		return self::$stored_credit;
 	}
@@ -306,8 +306,9 @@ class GFHANNANSMS_Pro {
 
 	public static function admin_notice() {
 		$class   = 'notice notice-success gf_sms_pro_notice is-dismissible';
+		$message = sprintf( __( 'Do you want to <strong>Sell License keys, itunes card, Phone card, Serial codes, Antivirus Keys, PIN and ...</strong> via Gravity Forms? Use %sGravity License Manager%s', 'GF_SMS' ), '<a target="_blank" href="https://codecanyon.net/item/gravity-forms-license-manager/20229926?ref=msmssoft">', '</a>' );
 		$message .= '<hr>';
-		$message .= sprintf( __( 'Do you ❤️ "Persian Gravity Forms SMS Pro"? Please Rate 5 Stars on %sWordpress.org%s', 'GF_SMS' ), '<a target="_blank" href="https://wordpress.org/plugins/persian-gravity-sms-pro">', '</a>' );
+		$message .= sprintf( __( 'Do you ❤️ "Gravity Forms SMS Pro"? Please Rate 5 Stars on %sCodecanyon%s', 'GF_SMS' ), '<a target="_blank" href="https://codecanyon.net/item/gravity-forms-sms-pro/14539019?ref=msmssoft">', '</a>' );
 
 		printf( '<div class="%1$s"><p>%2$s</p></div>', $class, $message );
 

@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class GFHANNANSMS_Pro_Bulk {
+class GFMSMSSMS_Pro_Bulk {
 
 	public static function construct() {
 
@@ -72,7 +72,7 @@ class GFHANNANSMS_Pro_Bulk {
 			$form_id = rgget( "id" );
 
 			if ( rgpost( "all_entries" ) ) {
-				if ( GFHANNANSMS_Pro::entry_type( 'GFAPI', 'get_entry_ids' ) ) {
+				if ( GFMSMSSMS_Pro::entry_type( 'GFAPI', 'get_entry_ids' ) ) {
 					$entries = GFAPI::get_entry_ids( $form_id, array() );
 				} else {
 					$entries = GFFormsModel::search_lead_ids( $form_id, array() );
@@ -87,18 +87,18 @@ class GFHANNANSMS_Pro_Bulk {
 				if ( is_wp_error( $entry ) ) {
 					$entry = false;
 				}
-				$clients[] = GFHANNANSMS_Pro_Entries_Sidebar::get_phone_numbers( $form_id, $entry );
+				$clients[] = GFMSMSSMS_Pro_Entries_Sidebar::get_phone_numbers( $form_id, $entry );
 			}
 			$clients = str_replace( ',,', ',', implode( ',', $clients ) );
 			$clients = $after_unigue = array_filter( array_unique( explode( ',', $clients ) ) );
 			$clients = ! empty( $clients ) ? str_replace( ',,', ',', implode( ',', $clients ) ) : '';
 
 			if ( ! empty( $clients ) ) { ?>
-                <form id="bulk_confirmation" method="post" action="admin.php?page=gf_hannansms&view=send">
-                    <input type="hidden" name="hannansms_bulk_numbers" value="<?php echo $clients; ?>"/>
-                    <input type="hidden" name="hannansms_bulk_entries" value="<?php echo implode( ',', $entries ) ?>"/>
-                    <input type="hidden" name="hannansms_bulk_form_id" value="<?php echo $form_id; ?>"/>
-                    <input type="submit" name="hannansms_bulk_submit" class="button-primary"
+                <form id="bulk_confirmation" method="post" action="admin.php?page=gf_msmssms&view=send">
+                    <input type="hidden" name="msmssms_bulk_numbers" value="<?php echo $clients; ?>"/>
+                    <input type="hidden" name="msmssms_bulk_entries" value="<?php echo implode( ',', $entries ) ?>"/>
+                    <input type="hidden" name="msmssms_bulk_form_id" value="<?php echo $form_id; ?>"/>
+                    <input type="submit" name="msmssms_bulk_submit" class="button-primary"
                            style="display:none !important;" value=""/>
                 </form>
                 <script type='text/javascript'>
@@ -124,17 +124,17 @@ class GFHANNANSMS_Pro_Bulk {
 
 
 	public static function send_many_numbers() {
-		$settings = GFHANNANSMS_Pro::get_option();
+		$settings = GFMSMSSMS_Pro::get_option();
 		$is_OK    = ( ! empty( $settings["ws"] ) && $settings["ws"] != 'no' );
 		$entries  = array();
 		$form_id  = '';
 
-		if ( rgpost( "hannansms_bulk_numbers" ) ) {
-			$form_id = rgpost( "hannansms_bulk_form_id" ) ? absint( rgpost( "hannansms_bulk_form_id" ) ) : "";
-			$entries = rgpost( "hannansms_bulk_entries" ) ? explode( ',', sanitize_text_field( rgpost( "hannansms_bulk_entries" ) ) ) : array();
-		} else if ( ! rgempty( "gf_hannansms_submit_send" ) && rgpost( "gf_hannansms_form_id_send" ) && rgpost( "gf_hannansms_entries_send" ) ) {
-			$form_id = rgpost( "gf_hannansms_form_id_send" ) ? absint( rgpost( "gf_hannansms_form_id_send" ) ) : "";
-			$entries = rgpost( "gf_hannansms_entries_send" ) ? explode( ',', sanitize_text_field( rgpost( "gf_hannansms_entries_send" ) ) ) : array();
+		if ( rgpost( "msmssms_bulk_numbers" ) ) {
+			$form_id = rgpost( "msmssms_bulk_form_id" ) ? absint( rgpost( "msmssms_bulk_form_id" ) ) : "";
+			$entries = rgpost( "msmssms_bulk_entries" ) ? explode( ',', sanitize_text_field( rgpost( "msmssms_bulk_entries" ) ) ) : array();
+		} else if ( ! rgempty( "gf_msmssms_submit_send" ) && rgpost( "gf_msmssms_form_id_send" ) && rgpost( "gf_msmssms_entries_send" ) ) {
+			$form_id = rgpost( "gf_msmssms_form_id_send" ) ? absint( rgpost( "gf_msmssms_form_id_send" ) ) : "";
+			$entries = rgpost( "gf_msmssms_entries_send" ) ? explode( ',', sanitize_text_field( rgpost( "gf_msmssms_entries_send" ) ) ) : array();
 		}
 
 		?>
@@ -151,9 +151,9 @@ class GFHANNANSMS_Pro_Bulk {
 			<?php }
 
 
-			if ( ! rgempty( "gf_hannansms_submit_send" ) ) {
+			if ( ! rgempty( "gf_msmssms_submit_send" ) ) {
 
-				check_admin_referer( "bulksend", "gf_hannansms_bulk_send" );
+				check_admin_referer( "bulksend", "gf_msmssms_bulk_send" );
 
 				global $current_user;
 				$user_id   = 0;
@@ -163,32 +163,32 @@ class GFHANNANSMS_Pro_Bulk {
 					$user_name = $user_data->display_name;
 				}
 
-				$from    = sanitize_text_field( rgpost( "gf_hannansms_from_send" ) );
+				$from    = sanitize_text_field( rgpost( "gf_msmssms_from_send" ) );
 				$from_db = get_option( "gf_sms_last_sender" );
 				if ( $from and $from_db != $from ) {
 					update_option( "gf_sms_last_sender", $from );
 				}
 
-				$to  = GFHANNANSMS_Form_Send::change_mobile( sanitize_text_field( rgpost( "gf_hannansms_to_send" ) ), '' );
-				$msg = wp_kses( rgpost( "gf_hannansms_msg_send" ), array( 'br' => array() ) );
+				$to  = GFMSMSSMS_Form_Send::change_mobile( sanitize_text_field( rgpost( "gf_msmssms_to_send" ) ), '' );
+				$msg = wp_kses( rgpost( "gf_msmssms_msg_send" ), array( 'br' => array() ) );
 				$msg = str_replace( array( "<br>", "<br/>", "<br />" ), array( "", "", "" ), $msg );
 
 				if ( $to ) {
 
-					$result = GFHANNANSMS_Pro_WebServices::action( $settings, 'send', $from, $to, $msg );
+					$result = GFMSMSSMS_Pro_WebServices::action( $settings, 'send', $from, $to, $msg );
 
 					if ( $result == 'OK' ) {
 
-						GFHANNANSMS_Pro_SQL::save_sms_sent( $form_id, $entries, $from, $to, $msg, '' );
+						GFMSMSSMS_Pro_SQL::save_sms_sent( $form_id, $entries, $from, $to, $msg, '' );
 						echo '<div class="updated fade" style="padding:6px">' . __( "Message sent successfully", "GF_SMS" ) . '</div>';
 
-						if ( rgpost( "gf_hannansms_form_id_send" ) && rgpost( "gf_hannansms_entries_send" ) ) {
+						if ( rgpost( "gf_msmssms_form_id_send" ) && rgpost( "gf_msmssms_entries_send" ) ) {
 							foreach ( (array) $entries as $entry_id ) {
 								$entry = GFAPI::get_entry( $entry_id );
 								if ( is_wp_error( $entry ) ) {
 									$entry = false;
 								}
-								$clients = GFHANNANSMS_Pro_Entries_Sidebar::get_phone_numbers( $form_id, $entry );
+								$clients = GFMSMSSMS_Pro_Entries_Sidebar::get_phone_numbers( $form_id, $entry );
 								if ( ! empty( $clients ) ) {
 									$receiver_note = sprintf( __( "Bulk Action : SMS sent to numbers successfully. Numbers : %s | Sender Number : %s | Message Body : %s.", "GF_SMS" ), $clients, $from, $msg );
 									RGFormsModel::add_note( $entry_id, $user_id, $user_name, $receiver_note );
@@ -201,13 +201,13 @@ class GFHANNANSMS_Pro_Bulk {
 
 						echo '<div class="error fade" style="padding:6px">' . sprintf( __( "The sending of the message encountered an error. Reason = %s", "GF_SMS" ), $result ) . '</div>';
 
-						if ( rgpost( "gf_hannansms_form_id_send" ) && rgpost( "gf_hannansms_entries_send" ) ) {
+						if ( rgpost( "gf_msmssms_form_id_send" ) && rgpost( "gf_msmssms_entries_send" ) ) {
 							foreach ( (array) $entries as $entry_id ) {
 								$entry = GFAPI::get_entry( $entry_id );
 								if ( is_wp_error( $entry ) ) {
 									$entry = false;
 								}
-								$clients = GFHANNANSMS_Pro_Entries_Sidebar::get_phone_numbers( $form_id, $entry );
+								$clients = GFMSMSSMS_Pro_Entries_Sidebar::get_phone_numbers( $form_id, $entry );
 								if ( ! empty( $clients ) ) {
 									$reciever_note = sprintf( __( "Bulk Action : The sending of the message encountered an error. Numbers : %s | Sender Number : %s | Reason : %s | Message Body : %s.", "GF_SMS" ), $clients, $from, $result, $msg );
 									RGFormsModel::add_note( $entry_id, $user_id, $user_name, $reciever_note );
@@ -221,7 +221,7 @@ class GFHANNANSMS_Pro_Bulk {
 				}
 			}
 
-			GFHANNANSMS_Pro::show_credit( $settings["cr"], true ); ?>
+			GFMSMSSMS_Pro::show_credit( $settings["cr"], true ); ?>
 
             <div class="postbox" style="padding:0 30px 20px; margin-top:10px;background:#F6FBFD;">
 
@@ -231,13 +231,13 @@ class GFHANNANSMS_Pro_Bulk {
 
 					<?php if ( $is_OK ) {
 
-						wp_nonce_field( "bulksend", "gf_hannansms_bulk_send" ) ?>
+						wp_nonce_field( "bulksend", "gf_msmssms_bulk_send" ) ?>
 
                         <div class="margin_vertical_10">
 
-                            <p class="gf_hannansms_bulk"><?php _e( "SMS Sender Number", "GF_SMS" ) ?></p>
+                            <p class="gf_msmssms_bulk"><?php _e( "SMS Sender Number", "GF_SMS" ) ?></p>
 
-                            <select id="gf_hannansms_from_send" name="gf_hannansms_from_send">
+                            <select id="gf_msmssms_from_send" name="gf_msmssms_from_send">
                                 <option value=""><?php _e( "Select Sender Number", "GF_SMS" ); ?></option>
 								<?php
 								$sender_num = ! empty( $settings["from"] ) ? $settings["from"] : '';
@@ -267,27 +267,27 @@ class GFHANNANSMS_Pro_Bulk {
                         </div>
 
                         <div class="margin_vertical_10">
-                            <p class="gf_hannansms_bulk"><?php _e( "Reciever numbers. separate with commas (,). +16175551212,+16175551213", "GF_SMS" ) ?></p>
-							<?php $reciver = rgpost( "hannansms_bulk_numbers" ) ? sanitize_text_field( rgpost( "hannansms_bulk_numbers" ) ) : sanitize_text_field( rgpost( "gf_hannansms_to_send" ) ); ?>
+                            <p class="gf_msmssms_bulk"><?php _e( "Reciever numbers. separate with commas (,). +16175551212,+16175551213", "GF_SMS" ) ?></p>
+							<?php $reciver = rgpost( "msmssms_bulk_numbers" ) ? sanitize_text_field( rgpost( "msmssms_bulk_numbers" ) ) : sanitize_text_field( rgpost( "gf_msmssms_to_send" ) ); ?>
                             <input type="text" style="direction:ltr; text-align:left;width:100%" class="fieldwidth-1"
-                                   name="gf_hannansms_to_send" value="<?php echo $reciver; ?>"/>
+                                   name="gf_msmssms_to_send" value="<?php echo $reciver; ?>"/>
                         </div>
 
                         <div class="margin_vertical_10">
-                            <p class="gf_hannansms_bulk"><?php _e( "Message", "GF_SMS" ) ?></p>
+                            <p class="gf_msmssms_bulk"><?php _e( "Message", "GF_SMS" ) ?></p>
 
                             <textarea style="height: 150px; width:415px;"
-                                      name="gf_hannansms_msg_send"><?php echo wp_kses( rgpost( "gf_hannansms_msg_send" ), array( 'br' => array() ) ); ?></textarea>
+                                      name="gf_msmssms_msg_send"><?php echo wp_kses( rgpost( "gf_msmssms_msg_send" ), array( 'br' => array() ) ); ?></textarea>
                         </div>
 
                         <div class="margin_vertical_10" style="clear:both; margin-top:20px;">
                             <input class="button-primary" type="submit" value="<?php _e( "Send", "GF_SMS" ) ?>"
-                                   name="gf_hannansms_submit_send" style="width:100px;">
+                                   name="gf_msmssms_submit_send" style="width:100px;">
                         </div>
 
 						<?php if ( ! empty( $form_id ) && ! empty( $entries ) ) { ?>
-                            <input type="hidden" name="gf_hannansms_form_id_send" value="<?php echo $form_id; ?>"/>
-                            <input type="hidden" name="gf_hannansms_entries_send"
+                            <input type="hidden" name="gf_msmssms_form_id_send" value="<?php echo $form_id; ?>"/>
+                            <input type="hidden" name="gf_msmssms_entries_send"
                                    value="<?php echo implode( ',', $entries ) ?>"/>
 						<?php }
 

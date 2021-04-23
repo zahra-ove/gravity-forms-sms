@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class GFHANNANSMS_Pro_Feeds {
+class GFMSMSSMS_Pro_Feeds {
 
 	public static function construct() {
 		if ( defined( 'RG_CURRENT_PAGE' ) && in_array( RG_CURRENT_PAGE, array( 'admin-ajax.php' ) ) ) {
@@ -18,8 +18,8 @@ class GFHANNANSMS_Pro_Feeds {
 	public static function ajax() {
 		check_ajax_referer( 'gf_feed_ajax_active', 'gf_feed_ajax_active' );
 		$id   = rgpost( "feed_id" );
-		$feed = GFHANNANSMS_Pro_SQL::get_feed( $id );
-		GFHANNANSMS_Pro_SQL::update_feed( $id, $feed["form_id"], rgpost( "is_active" ), $feed["meta"] );
+		$feed = GFMSMSSMS_Pro_SQL::get_feed( $id );
+		GFMSMSSMS_Pro_SQL::update_feed( $id, $feed["form_id"], rgpost( "is_active" ), $feed["meta"] );
 	}
 
 	public static function feeds( $arg ) {
@@ -28,7 +28,7 @@ class GFHANNANSMS_Pro_Feeds {
 
 		$is_support = 'yes';
 		if ( class_exists( "GFCommon" ) ) {
-			if ( ! version_compare( GFCommon::$version, GFHANNANSMS_Pro::$gf_version, ">=" ) ) {
+			if ( ! version_compare( GFCommon::$version, GFMSMSSMS_Pro::$gf_version, ">=" ) ) {
 				$is_support = 'no';
 			}
 		} else {
@@ -36,22 +36,22 @@ class GFHANNANSMS_Pro_Feeds {
 		}
 
 		if ( $is_support == 'no' ) {
-			die( sprintf( __( "Gravity forms SMS Pro requires Gravity Forms %s. Upgrade automatically on the %sPlugin page%s.", "GF_SMS" ), GFHANNANSMS_Pro::$gf_version, "<a href='plugins.php'>", "</a>" ) );
+			die( sprintf( __( "Gravity forms SMS Pro requires Gravity Forms %s. Upgrade automatically on the %sPlugin page%s.", "GF_SMS" ), GFMSMSSMS_Pro::$gf_version, "<a href='plugins.php'>", "</a>" ) );
 		}
 
 		if ( rgpost( "action" ) == "delete" ) {
-			check_admin_referer( "list_action", "gf_hannansms_list" );
+			check_admin_referer( "list_action", "gf_msmssms_list" );
 			$id = absint( rgpost( "action_argument" ) );
-			GFHANNANSMS_Pro_SQL::remove_feed( $id ); ?>
+			GFMSMSSMS_Pro_SQL::remove_feed( $id ); ?>
             <div class="updated fade" style="padding:6px"><?php _e( "Feed deleted.", "GF_SMS" ) ?></div>
 			<?php
 		} else if ( ! rgempty( "bulk_action" ) ) {
 
-			check_admin_referer( "list_action", "gf_hannansms_list" );
+			check_admin_referer( "list_action", "gf_msmssms_list" );
 			$selected_feeds = rgpost( "feed" );
 			if ( is_array( $selected_feeds ) ) {
 				foreach ( (array) $selected_feeds as $feed_id ) {
-					GFHANNANSMS_Pro_SQL::remove_feed( $feed_id );
+					GFMSMSSMS_Pro_SQL::remove_feed( $feed_id );
 				}
 			}
 			?>
@@ -59,7 +59,7 @@ class GFHANNANSMS_Pro_Feeds {
 			<?php
 		}
 
-		$settings = GFHANNANSMS_Pro::get_option();
+		$settings = GFMSMSSMS_Pro::get_option();
 		$is_OK    = ( ! empty( $settings["ws"] ) && $settings["ws"] != 'no' );
 		?>
 
@@ -72,18 +72,18 @@ class GFHANNANSMS_Pro_Feeds {
                 <br/>
 				<?php
 				if ( $is_OK ) {
-					GFHANNANSMS_Pro::show_credit( $settings["cr"], true );
+					GFMSMSSMS_Pro::show_credit( $settings["cr"], true );
 					?>
                     <a class="add-new-h2"
-                       href="admin.php?page=gf_hannansms&view=edit&id=0"><?php _e( "Add New", "GF_SMS" ) ?></a>
+                       href="admin.php?page=gf_msmssms&view=edit&id=0"><?php _e( "Add New", "GF_SMS" ) ?></a>
                     <a class="add-new-h2"
-                       href="admin.php?page=gf_hannansms&view=send"><?php _e( "Send SMS to custom numbers", "GF_SMS" ) ?></a>
+                       href="admin.php?page=gf_msmssms&view=send"><?php _e( "Send SMS to custom numbers", "GF_SMS" ) ?></a>
 					<?php
 				}
 			}
 			?>
             <form id="feed_form" method="post">
-				<?php wp_nonce_field( 'list_action', 'gf_hannansms_list' ) ?>
+				<?php wp_nonce_field( 'list_action', 'gf_msmssms_list' ) ?>
                 <input type="hidden" id="action" name="action"/>
                 <input type="hidden" id="action_argument" name="action_argument"/>
                 <div class="tablenav">
@@ -98,7 +98,7 @@ class GFHANNANSMS_Pro_Feeds {
                         <a class="button-primary"
                            href="admin.php?page=gf_settings&subview=gf_sms_pro"><?php _e( "SMS General settings", "GF_SMS" ) ?></a>
                         <a class="button-primary"
-                           href="admin.php?page=gf_hannansms&view=sent<?php echo rgget( 'id' ) ? '&id=' . rgget( 'id' ) : '' ?>"><?php _e( "Sent Messages", "GF_SMS" ) ?></a>
+                           href="admin.php?page=gf_msmssms&view=sent<?php echo rgget( 'id' ) ? '&id=' . rgget( 'id' ) : '' ?>"><?php _e( "Sent Messages", "GF_SMS" ) ?></a>
 
                     </div>
                 </div>
@@ -139,9 +139,9 @@ class GFHANNANSMS_Pro_Feeds {
 					<?php
 
 					if ( rgget( 'id' ) ) {
-						$feeds = GFHANNANSMS_Pro_SQL::get_feed_via_formid( rgget( 'id' ), false );
+						$feeds = GFMSMSSMS_Pro_SQL::get_feed_via_formid( rgget( 'id' ), false );
 					} else {
-						$feeds = GFHANNANSMS_Pro_SQL::get_feeds();
+						$feeds = GFMSMSSMS_Pro_SQL::get_feeds();
 					}
 					if ( ! $is_OK ) { ?>
                         <tr>
@@ -168,13 +168,13 @@ class GFHANNANSMS_Pro_Feeds {
 									<?php if ( ! $show ) { ?>
                                         <td class="column-title">
                                             <strong>
-                                                <a href="admin.php?page=gf_hannansms&view=edit&id=<?php echo $feed["id"] ?>"
+                                                <a href="admin.php?page=gf_msmssms&view=edit&id=<?php echo $feed["id"] ?>"
                                                    title="<?php _e( "Edit Config", "GF_SMS" ) ?>"><?php echo $feed["id"] ?></a>
                                             </strong>
                                             <div class="row-actions">
 													<span class="edit">
 														<a title="<?php _e( "Configuration", "GF_SMS" ) ?>"
-                                                           href="admin.php?page=gf_hannansms&view=edit&id=<?php echo $feed["id"] ?>"><?php _e( "Configuration", "GF_SMS" ) ?></a>
+                                                           href="admin.php?page=gf_msmssms&view=edit&id=<?php echo $feed["id"] ?>"><?php _e( "Configuration", "GF_SMS" ) ?></a>
 														|
 													</span>
                                                 <span class="trash">
@@ -188,13 +188,13 @@ class GFHANNANSMS_Pro_Feeds {
                                         <td style="text-align:center"><?php echo $feed["form_id"] ?> </td>
                                         <td class="column-title">
                                             <strong>
-                                                <a href="admin.php?page=gf_hannansms&view=edit&id=<?php echo $feed["id"] ?>"
+                                                <a href="admin.php?page=gf_msmssms&view=edit&id=<?php echo $feed["id"] ?>"
                                                    title="<?php _e( "Edit Config", "GF_SMS" ) ?>"><?php echo $feed["form_title"] ?></a>
                                             </strong>
                                             <div class="row-actions">
 													<span class="edit">
 														<a title="<?php _e( "Configuration", "GF_SMS" ) ?>"
-                                                           href="admin.php?page=gf_hannansms&view=edit&id=<?php echo $feed["id"] ?>"><?php _e( "Configuration", "GF_SMS" ) ?></a>
+                                                           href="admin.php?page=gf_msmssms&view=edit&id=<?php echo $feed["id"] ?>"><?php _e( "Configuration", "GF_SMS" ) ?></a>
 														|
 													</span>
                                                 <span class="edit">
@@ -219,7 +219,7 @@ class GFHANNANSMS_Pro_Feeds {
 													</span>
                                                 <span class="outbox">
 														<a title="<?php _e( "Outbox", "GF_SMS" ) ?>"
-                                                           href="admin.php?page=gf_hannansms&view=sent&id=<?php echo $feed["form_id"] ?>"><?php _e( "Form Outbox", "GF_SMS" ) ?></a>
+                                                           href="admin.php?page=gf_msmssms&view=sent&id=<?php echo $feed["form_id"] ?>"><?php _e( "Form Outbox", "GF_SMS" ) ?></a>
 													</span>
                                             </div>
                                         </td>
@@ -228,7 +228,7 @@ class GFHANNANSMS_Pro_Feeds {
                                             <strong>
                                                 <a href="<?php echo admin_url( "admin.php?page=gf_entries&view=entries&id={$feed["form_id"]}" ); ?>">
 													<?php
-													if ( GFHANNANSMS_Pro::entry_type( 'GFAPI', 'count_entries' ) ) {
+													if ( GFMSMSSMS_Pro::entry_type( 'GFAPI', 'count_entries' ) ) {
 														echo GFAPI::count_entries( $feed["form_id"], array() );
 													} else {
 														echo RGFormsModel::get_lead_count( $feed["form_id"], '', null, null, null, null, null );
@@ -268,7 +268,7 @@ class GFHANNANSMS_Pro_Feeds {
 							?>
                             <tr>
                                 <td colspan="<?php echo ! $show ? '5' : '8' ?>" style="padding:20px;">
-									<?php echo sprintf( __( "You don't have any SMS feeds configured. Let's go %screate one%s!", "GF_SMS" ), '<a href="admin.php?page=gf_hannansms&view=edit&id=0&fid=' . absint( rgget( "id" ) ) . '">', "</a>" ); ?>
+									<?php echo sprintf( __( "You don't have any SMS feeds configured. Let's go %screate one%s!", "GF_SMS" ), '<a href="admin.php?page=gf_msmssms&view=edit&id=0&fid=' . absint( rgget( "id" ) ) . '">', "</a>" ); ?>
                                 </td>
                             </tr>
 							<?php
@@ -325,7 +325,7 @@ class GFHANNANSMS_Pro_Feeds {
 
         <h3><span><i class="fa fa-mobile"></i> <?php esc_html_e( 'SMS', 'GF_SMS' ) ?>
                 <a id="add-new-confirmation" class="add-new-h2"
-                   href="<?php echo esc_url( admin_url( 'admin.php?page=gf_hannansms&view=edit&id=0&fid=' . absint( rgget( "id" ) ) ) ) ?>"><?php esc_html_e( 'Add New', 'GF_SMS' ) ?></a></span>
+                   href="<?php echo esc_url( admin_url( 'admin.php?page=gf_msmssms&view=edit&id=0&fid=' . absint( rgget( "id" ) ) ) ) ?>"><?php esc_html_e( 'Add New', 'GF_SMS' ) ?></a></span>
         </h3>
 
 		<?php self::feeds( 'settings' ); ?>

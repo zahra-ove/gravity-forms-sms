@@ -121,7 +121,7 @@ class GF_SMS_Sent_List_Table extends WP_List_Table {
 	public function record_count() {
 		global $wpdb;
 
-		$sent_table_name = GFHANNANSMS_Pro_SQL::sent_table();
+		$sent_table_name = GFMSMSSMS_Pro_SQL::sent_table();
 
 		$sql = "SELECT COUNT(*) FROM {$sent_table_name}";
 
@@ -172,7 +172,7 @@ class GF_SMS_Sent_List_Table extends WP_List_Table {
 	public function delete_item( $id ) {
 		global $wpdb;
 
-		$sent_table_name = GFHANNANSMS_Pro_SQL::sent_table();
+		$sent_table_name = GFMSMSSMS_Pro_SQL::sent_table();
 
 		$wpdb->delete( $sent_table_name, array( 'id' => $id ) );
 	}
@@ -189,7 +189,7 @@ class GF_SMS_Sent_List_Table extends WP_List_Table {
 
 		global $wpdb;
 
-		$sent_table_name = GFHANNANSMS_Pro_SQL::sent_table();
+		$sent_table_name = GFMSMSSMS_Pro_SQL::sent_table();
 
 		$sql = "SELECT * FROM {$sent_table_name}";
 
@@ -218,7 +218,7 @@ class GF_SMS_Sent_List_Table extends WP_List_Table {
 } //class
 
 
-class GFHANNANSMS_Pro_Sent {
+class GFMSMSSMS_Pro_Sent {
 
 	public static function table() {
 

@@ -1,11 +1,11 @@
 <?php
 /*
-Plugin Name: پیامک گرویتی فرم
+Plugin Name: Ippanel Sms Pro Gv
 Description: The most comprehensive SMS plugin for Gravity Forms
 Version: 1.0
-Plugin URI: https://gravityforms.ir/9975/
-Author: گرویتی فرم پارسی
-Author URI: https://gravityforms.ir
+Plugin URI: http://ippanel.com
+Author: پنل ارسال پیامک
+Author URI: https://ippanel.com
 Text Domain: GF_SMS
 Domain Path: /languages/
 */
@@ -34,7 +34,7 @@ function gravitysms_load_textdomain() {
 
 require_once( GF_SMS_DIR . 'includes/main.php' );
 
-add_action( 'plugins_loaded', array( 'GFHANNANSMS_Pro', 'construct' ), 10 );
+add_action( 'plugins_loaded', array( 'GFMSMSSMS_Pro', 'construct' ), 10 );
 
-register_activation_hook( __FILE__, array( 'GFHANNANSMS_Pro', 'active' ) );
-register_deactivation_hook( __FILE__, array( 'GFHANNANSMS_Pro', 'deactive' ) );
+register_activation_hook( __FILE__, array( 'GFMSMSSMS_Pro', 'active' ) );
+register_deactivation_hook( __FILE__, array( 'GFMSMSSMS_Pro', 'deactive' ) );

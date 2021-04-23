@@ -3,10 +3,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class GFHANNANSMS_Pro_SQL {
+class GFMSMSSMS_Pro_SQL {
 
 	public static function setup_update() {
-		if ( get_option( "gf_sms_version" ) != GFHANNANSMS_Pro::$version || ! get_option( 'gf_sms_installed' ) ) {
+		if ( get_option( "gf_sms_version" ) != GFMSMSSMS_Pro::$version || ! get_option( 'gf_sms_installed' ) ) {
 			self::gf_sms_create_tables();
 		}
 	}
@@ -32,7 +32,7 @@ class GFHANNANSMS_Pro_SQL {
 	public static function gf_sms_create_tables() {
 
 		update_option( 'gf_sms_installed', '1' );
-		update_option( 'gf_sms_version', GFHANNANSMS_Pro::$version );
+		update_option( 'gf_sms_version', GFMSMSSMS_Pro::$version );
 
 		if ( ! function_exists( 'dbDelta' ) ) {
 			require_once( ABSPATH . '/wp-admin/includes/upgrade.php' );
@@ -55,7 +55,7 @@ class GFHANNANSMS_Pro_SQL {
 		/*---------------------------------------------------------------------*/
 		$main_table_name = self::main_table();
 
-		foreach ( array( 'HANNANStd_GravitySMS', 'gravity_sms_pro_hannanstd' ) as $old_table ) {
+		foreach ( array( 'MSMSStd_GravitySMS', 'gravity_sms_pro_msmsstd' ) as $old_table ) {
 			$old_table = $wpdb->prefix . $old_table;
 			if ( $wpdb->get_var( "SHOW TABLES LIKE '{$old_table}'" ) ) {
 				$wpdb->query( "RENAME TABLE $old_table TO $main_table_name" );

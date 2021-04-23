@@ -2,9 +2,9 @@
 	exit;
 }
 
-if ( ! class_exists( 'GFHANNANSMS_Pro_WebServices' ) ) {
+if ( ! class_exists( 'GFMSMSSMS_Pro_WebServices' ) ) {
 
-	class GFHANNANSMS_Pro_WebServices {
+	class GFMSMSSMS_Pro_WebServices {
 
 		public static function get() {
 			return apply_filters( 'gf_sms_gateways', array( 'no' => __( 'Select a Gateway', 'GF_SMS' ) ) );
@@ -19,7 +19,7 @@ if ( ! class_exists( 'GFHANNANSMS_Pro_WebServices' ) ) {
 			}
 
 			$GATEWAY = strtoupper( $gateway );
-			$Gateway = 'GFHANNANSMS_Pro_' . $GATEWAY;
+			$Gateway = 'GFMSMSSMS_Pro_' . $GATEWAY;
 
 			$messages = str_replace( array( "<br>", "<br/>", "<br />", '&nbsp;' ), array(
 				"\n",
@@ -41,7 +41,7 @@ if ( ! class_exists( 'GFHANNANSMS_Pro_WebServices' ) ) {
 				}
 				*/
 
-				$options = get_option( "gf_hannansms_" . $GATEWAY );
+				$options = get_option( "gf_msmssms_" . $GATEWAY );
 				$result  = $Gateway::process( $options, $action, $from, $to, $messages );
 
 				/*if ( ! empty( $error ) ) {

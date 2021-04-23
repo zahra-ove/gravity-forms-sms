@@ -2,7 +2,7 @@
 	exit;
 }
 
-class GFHANNANSMS_Form_Send {
+class GFMSMSSMS_Form_Send {
 
 	public static function construct() {
 
@@ -19,15 +19,15 @@ class GFHANNANSMS_Form_Send {
 	}
 
 	public static function Send( $to, $msg, $from = '', $form_id = '', $entry_id = '', $verify_code = '' ) {
-		$settings = GFHANNANSMS_Pro::get_option();
+		$settings = GFMSMSSMS_Pro::get_option();
 		//$default_froms = array();
 		$default_froms = explode( ',', $settings["from"] );
 		$default_from  = $default_froms[0];
 		$to            = self::change_mobile( $to, '' );
 		$from          = ( ! empty( $from ) && $from != '' ) ? $from : $default_from;
-		$result        = GFHANNANSMS_Pro_WebServices::action( $settings, "send", $from, $to, $msg );
+		$result        = GFMSMSSMS_Pro_WebServices::action( $settings, "send", $from, $to, $msg );
 		if ( $result == 'OK' ) {
-			GFHANNANSMS_Pro_SQL::save_sms_sent( $form_id, $entry_id, $from, $to, $msg, $verify_code );
+			GFMSMSSMS_Pro_SQL::save_sms_sent( $form_id, $entry_id, $from, $to, $msg, $verify_code );
 		}
 
 		return $result;
@@ -41,7 +41,7 @@ class GFHANNANSMS_Form_Send {
 		}
 
 		if ( empty( $code ) ) {
-			$settings = GFHANNANSMS_Pro::get_option();
+			$settings = GFMSMSSMS_Pro::get_option();
 			if ( ! empty( $settings["code"] ) ) {
 				$code = $settings["code"];
 			}
@@ -68,7 +68,7 @@ class GFHANNANSMS_Form_Send {
 		}
 
 		if ( empty( $code ) ) {
-			$settings = GFHANNANSMS_Pro::get_option();
+			$settings = GFMSMSSMS_Pro::get_option();
 			if ( ! empty( $settings["code"] ) ) {
 				$code = $settings["code"];
 			}
@@ -102,7 +102,7 @@ class GFHANNANSMS_Form_Send {
 			return;
 		}
 
-		$feeds = GFHANNANSMS_Pro_SQL::get_feed_via_formid( $form["id"], true );
+		$feeds = GFMSMSSMS_Pro_SQL::get_feed_via_formid( $form["id"], true );
 
 		$numbers = array();
 		foreach ( (array) $feeds as $feed ) {
@@ -193,7 +193,7 @@ class GFHANNANSMS_Form_Send {
 			return;
 		}
 
-		$settings = GFHANNANSMS_Pro::get_option();
+		$settings = GFMSMSSMS_Pro::get_option();
 
 		if ( empty( $settings["ws"] ) || $settings["ws"] == 'no' ) {
 			RGFormsModel::add_note( $entry["id"], 0, __( 'SMS Pro', 'GF_SMS' ), __( 'No Gateway found.', 'GF_SMS' ) );
@@ -201,7 +201,7 @@ class GFHANNANSMS_Form_Send {
 			return;
 		}
 
-		$feeds  = GFHANNANSMS_Pro_SQL::get_feed_via_formid( $form["id"], true );
+		$feeds  = GFMSMSSMS_Pro_SQL::get_feed_via_formid( $form["id"], true );
 		$status = strtolower( $status );
 
 		foreach ( (array) $feeds as $feed ) {
@@ -210,7 +210,7 @@ class GFHANNANSMS_Form_Send {
 				break;
 			}
 
-			$sent = gform_get_meta( $entry["id"], "gf_hannansms_sent_" . $feed["id"] );
+			$sent = gform_get_meta( $entry["id"], "gf_msmssms_sent_" . $feed["id"] );
 			if ( $sent == 'yes' ) {
 				continue;
 			}
@@ -259,7 +259,7 @@ class GFHANNANSMS_Form_Send {
 				continue;
 			}
 
-			gform_update_meta( $entry["id"], "gf_hannansms_sent_" . $feed["id"], "yes" );
+			gform_update_meta( $entry["id"], "gf_msmssms_sent_" . $feed["id"], "yes" );
 			$from    = isset( $feed["meta"]["from"] ) ? $feed["meta"]["from"] : '';
 			$from_db = get_option( "gf_sms_last_sender" );
 			if ( $from and ( $from_db != $from ) ) {
@@ -269,18 +269,18 @@ class GFHANNANSMS_Form_Send {
 
 			if ( self::check_condition( $entry, $form, $feed, 'admin' ) ) {
 
-				$admin_msg    = GFCommon::replace_variables( $feed["meta"]["message"], $form, $entry, false, true, false, 'text' );
+				$admin_msg    = GFCommon::replace_variables( $feed["meta"]["message"], $form, $entry );
 				$admin_number = isset( $feed["meta"]["to"] ) ? $feed["meta"]["to"] : '';
 				$admin_number = self::change_mobile( $admin_number, '' );
 				if ( $admin_number and $admin_number != '' ) {
 
-					$result = GFHANNANSMS_Pro_WebServices::action( $settings, 'send', $from, $admin_number, $admin_msg );
+					$result = GFMSMSSMS_Pro_WebServices::action( $settings, 'send', $from, $admin_number, $admin_msg );
 
 					if ( $result == 'OK' ) {
 						$admin_sender = $from;
 						$admin_fault  = '';
 						$admin_note   = __( 'Feed %s => SMS sent to Admin successfully. Admin Number : %s | Sender Number : %s %s | Message Body : %s', 'GF_SMS' );
-						GFHANNANSMS_Pro_SQL::save_sms_sent( $form['id'], $entry['id'], $from, $admin_number, $admin_msg, '' );
+						GFMSMSSMS_Pro_SQL::save_sms_sent( $form['id'], $entry['id'], $from, $admin_number, $admin_msg, '' );
 					} else {
 						$admin_sender = $from;
 						$admin_fault  = $result;
@@ -300,20 +300,20 @@ class GFHANNANSMS_Form_Send {
 
 			if ( self::check_condition( $entry, $form, $feed, 'client' ) ) {
 
-				$client_msg    = GFCommon::replace_variables( $feed["meta"]["message_c"], $form, $entry, false, true, false, 'text' );
+				$client_msg    = GFCommon::replace_variables( $feed["meta"]["message_c"], $form, $entry );
 				$client_number = "client_mobile_number_" . $feed["id"];
 
 				if ( gform_get_meta( $entry["id"], $client_number ) ) {
 
 					$client_number = gform_get_meta( $entry["id"], $client_number );
-					$result        = GFHANNANSMS_Pro_WebServices::action( $settings, 'send', $from, $client_number, $client_msg );
+					$result        = GFMSMSSMS_Pro_WebServices::action( $settings, 'send', $from, $client_number, $client_msg );
 					$result        = ( isset( $result ) || $result ) ? $result : '';
 
 					if ( $result == 'OK' ) {
 						$client_sender = $from;
 						$client_fault  = '';
 						$client_note   = __( 'Feed %s => SMS sent to user successfully. User Number : %s | Sender Number : %s %s | Message Body : %s', 'GF_SMS' );
-						GFHANNANSMS_Pro_SQL::save_sms_sent( $form['id'], $entry['id'], $from, $client_number, $client_msg, '' );
+						GFMSMSSMS_Pro_SQL::save_sms_sent( $form['id'], $entry['id'], $from, $client_number, $client_msg, '' );
 					} else {
 						$client_sender = $from;
 						$client_fault  = $result;

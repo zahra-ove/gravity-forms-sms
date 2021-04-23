@@ -3,13 +3,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class GFHANNANSMS_Pro_Configurations {
+class GFMSMSSMS_Pro_Configurations {
 
 	public static function construct() {
 
 		if ( defined( 'RG_CURRENT_PAGE' ) && in_array( RG_CURRENT_PAGE, array( 'admin-ajax.php' ) ) ) {
-			add_action( 'wp_ajax_gf_select_hannansms_form', array( __CLASS__, 'select_forms_ajax' ) );
-			add_action( 'wp_ajax_nopriv_gf_select_hannansms_form', array( __CLASS__, 'select_forms_ajax' ) );
+			add_action( 'wp_ajax_gf_select_msmssms_form', array( __CLASS__, 'select_forms_ajax' ) );
+			add_action( 'wp_ajax_nopriv_gf_select_msmssms_form', array( __CLASS__, 'select_forms_ajax' ) );
 		}
 	}
 
@@ -21,12 +21,12 @@ class GFHANNANSMS_Pro_Configurations {
         <div class="wrap gforms_edit_form gf_browser_gecko">
 
 			<?php
-			$id        = ! rgempty( "hannansms_setting_id" ) ? rgpost( "hannansms_setting_id" ) : absint( rgget( "id" ) );
+			$id        = ! rgempty( "msmssms_setting_id" ) ? rgpost( "msmssms_setting_id" ) : absint( rgget( "id" ) );
 			$config    = empty( $id ) ? array(
 				"is_active" => true,
 				"meta"      => array()
-			) : GFHANNANSMS_Pro_SQL::get_feed( $id );
-			$get_feeds = GFHANNANSMS_Pro_SQL::get_feeds();
+			) : GFMSMSSMS_Pro_SQL::get_feed( $id );
+			$get_feeds = GFMSMSSMS_Pro_SQL::get_feeds();
 			$form_name = '';
 
 			$_get_form_id = ! empty( $config["form_id"] ) ? $config["form_id"] : rgget( 'fid' );
@@ -53,34 +53,34 @@ class GFHANNANSMS_Pro_Configurations {
                style="margin:8px 9px;"><?php _e( "SMS General settings", "GF_SMS" ) ?></a>
 
 			<?php
-			$settings = GFHANNANSMS_Pro::get_option();
+			$settings = GFMSMSSMS_Pro::get_option();
 			$is_OK    = ( ! empty( $settings["ws"] ) && $settings["ws"] != 'no' );
 
 			if ( $is_OK ) {
 				echo '<div style="display:inline-table;margin-top:7px !important">';
-				GFHANNANSMS_Pro::show_credit( $settings["cr"], true );
+				GFMSMSSMS_Pro::show_credit( $settings["cr"], true );
 				echo '</div>';
 			} else {
 				wp_die();
 			}
 
-			if ( ! rgempty( "gf_hannansms_submit" ) ) {
+			if ( ! rgempty( "gf_msmssms_submit" ) ) {
 
-				check_admin_referer( "update", "gf_hannansms_feed" );
+				check_admin_referer( "update", "gf_msmssms_feed" );
 
-				$config["form_id"]                           = absint( rgpost( "gf_hannansms_form" ) );
-				$config["meta"]["from"]                      = rgpost( "gf_hannansms_from" );
-				$config["meta"]["to"]                        = rgpost( "gf_hannansms_to" );
-				$config["meta"]["to_c"]                      = rgpost( "gf_hannansms_to_c" );
-				$config["meta"]["when"]                      = rgpost( "gf_hannansms_when" );
-				$config["meta"]["message"]                   = rgpost( "gf_hannansms_message" );
-				$config["meta"]["message_c"]                 = rgpost( "gf_hannansms_message_c" );
+				$config["form_id"]                           = absint( rgpost( "gf_msmssms_form" ) );
+				$config["meta"]["from"]                      = rgpost( "gf_msmssms_from" );
+				$config["meta"]["to"]                        = rgpost( "gf_msmssms_to" );
+				$config["meta"]["to_c"]                      = rgpost( "gf_msmssms_to_c" );
+				$config["meta"]["when"]                      = rgpost( "gf_msmssms_when" );
+				$config["meta"]["message"]                   = rgpost( "gf_msmssms_message" );
+				$config["meta"]["message_c"]                 = rgpost( "gf_msmssms_message_c" );
 				$config["meta"]["gf_sms_change_code"]        = rgpost( 'gf_sms_change_code' );
 				$config["meta"]["gf_change_code_type"]       = rgpost( "gf_change_code_type" );
 				$config["meta"]["gf_code_static"]            = rgpost( "gf_code_static" );
-				$config["meta"]["gf_code_dyn"]               = rgpost( "hannansms_gf_code_dyn" );
+				$config["meta"]["gf_code_dyn"]               = rgpost( "msmssms_gf_code_dyn" );
 				$config["meta"]["gf_sms_is_gateway_checked"] = rgpost( 'gf_sms_is_gateway_checked' );
-				$config["meta"]["customer_field_clientnum"]  = rgpost( "hannansms_customer_field_clientnum" );
+				$config["meta"]["customer_field_clientnum"]  = rgpost( "msmssms_customer_field_clientnum" );
 
 				//----------------------
 				$config["meta"]["adminsms_conditional_enabled"]  = rgpost( 'gf_adminsms_conditional_enabled' );
@@ -116,16 +116,16 @@ class GFHANNANSMS_Pro_Configurations {
 
 				$config["meta"] = $safe_data;
 
-				$id = GFHANNANSMS_Pro_SQL::update_feed( $id, $config["form_id"], $config["is_active"], $config["meta"] );
+				$id = GFMSMSSMS_Pro_SQL::update_feed( $id, $config["form_id"], $config["is_active"], $config["meta"] );
 
 				if ( ! headers_sent() ) {
-					wp_redirect( admin_url( 'admin.php?page=gf_hannansms&view=edit&id=' . $id . '&updated=true' ) );
+					wp_redirect( admin_url( 'admin.php?page=gf_msmssms&view=edit&id=' . $id . '&updated=true' ) );
 					exit;
 				}
 				?>
 
                 <div class="updated fade"
-                     style="padding:6px"><?php echo sprintf( __( "Feed Updated. %sback to list%s", "GF_SMS" ), "<a href='?page=gf_hannansms'>", "</a>" ) ?></div>
+                     style="padding:6px"><?php echo sprintf( __( "Feed Updated. %sback to list%s", "GF_SMS" ), "<a href='?page=gf_msmssms'>", "</a>" ) ?></div>
 
 				<?php
 			}
@@ -137,7 +137,7 @@ class GFHANNANSMS_Pro_Configurations {
 				$id = empty( $id ) && isset( $_GET['id'] ) ? rgget( 'id' ) : $id; ?>
 
                 <div class="updated fade"
-                     style="padding:6px"><?php echo sprintf( __( "Feed Updated. %sback to list%s", "GF_SMS" ), "<a href='?page=gf_hannansms'>", "</a>" ) ?></div>
+                     style="padding:6px"><?php echo sprintf( __( "Feed Updated. %sback to list%s", "GF_SMS" ), "<a href='?page=gf_msmssms'>", "</a>" ) ?></div>
 
 				<?php
 			}
@@ -154,7 +154,7 @@ class GFHANNANSMS_Pro_Configurations {
                         <li class="gf_form_switcher">
                             <label for="export_form"><?php _e( 'Select a feed', 'GF_SMS' ) ?></label>
 							<?php
-							$feeds = GFHANNANSMS_Pro_SQL::get_feeds();
+							$feeds = GFMSMSSMS_Pro_SQL::get_feeds();
 							?>
                             <select name="form_switcher" id="form_switcher"
                                     onchange="GF_SwitchForm(jQuery(this).val());">
@@ -216,9 +216,9 @@ class GFHANNANSMS_Pro_Configurations {
                             </h3>
                             <form method="post" action="" id="gform_form_settings">
 
-								<?php wp_nonce_field( "update", "gf_hannansms_feed" ) ?>
+								<?php wp_nonce_field( "update", "gf_msmssms_feed" ) ?>
 
-                                <input type="hidden" name="hannansms_setting_id" value="<?php echo $id ?>"/>
+                                <input type="hidden" name="msmssms_setting_id" value="<?php echo $id ?>"/>
                                 <table class="gforms_form_settings" cellspacing="0" cellpadding="0">
                                     <tbody>
                                     <tr>
@@ -229,12 +229,12 @@ class GFHANNANSMS_Pro_Configurations {
                                         </td>
                                     </tr>
 
-                                    <tr id="hannansms_form_container">
+                                    <tr id="msmssms_form_container">
                                         <th>
 											<?php _e( "Select form", "GF_SMS" ); ?>
                                         </th>
                                         <td>
-                                            <select id="gf_hannansms_form" name="gf_hannansms_form"
+                                            <select id="gf_msmssms_form" name="gf_msmssms_form"
                                                     onchange="SelectFormAjax(jQuery(this).val());">
                                                 <option
                                                         value=""><?php _e( "Please select a form", "GF_SMS" ); ?> </option>
@@ -247,14 +247,14 @@ class GFHANNANSMS_Pro_Configurations {
 												<?php } ?>
                                             </select>&nbsp;&nbsp;
                                             <img src="<?php echo esc_url( GFCommon::get_base_url() ) ?>/images/spinner.gif"
-                                                 id="hannansms_wait" style="display: none;"/>
+                                                 id="msmssms_wait" style="display: none;"/>
                                         </td>
                                     </tr>
                                     </tbody>
                                 </table>
 
                                 <table class="gforms_form_settings"
-                                       id="hannansms_field_group" <?php echo empty( $_get_form_id ) ? "style='display:none;'" : "" ?>
+                                       id="msmssms_field_group" <?php echo empty( $_get_form_id ) ? "style='display:none;'" : "" ?>
                                        cellspacing="0" cellpadding="0">
                                     <tbody>
                                     <tr>
@@ -262,7 +262,7 @@ class GFHANNANSMS_Pro_Configurations {
 											<?php _e( "Sender Number", "GF_SMS" ); ?>
                                         </th>
                                         <td>
-                                            <select id="gf_hannansms_from" name="gf_hannansms_from">
+                                            <select id="gf_msmssms_from" name="gf_msmssms_from">
                                                 <option value=""><?php _e( "Select Sender Number", "GF_SMS" ); ?></option>
 												<?php
 												$sender_num = isset( $settings["from"] ) ? $settings["from"] : '';
@@ -311,7 +311,7 @@ class GFHANNANSMS_Pro_Configurations {
                                                     <td>
                                                         <div id="gf_sms_is_gateway_checked_box" <?php echo ! rgar( $config['meta'], 'gf_sms_is_gateway_checked' ) ? 'style="display:none"' : ''; ?>>
                                                             <p><?php _e( "Sending time configuration : ", "GF_SMS" ) ?></p>
-                                                            <select id="gf_hannansms_when" name="gf_hannansms_when">
+                                                            <select id="gf_msmssms_when" name="gf_msmssms_when">
                                                                 <option
                                                                         value="send_immediately" <?php echo ( isset( $config["meta"]["when"] ) && "send_immediately" == $config["meta"]["when"] ) ? "selected='selected'" : ""; ?> ><?php _e( "Immediately after form submission", "GF_SMS" ); ?> </option>
                                                                 <option
@@ -359,11 +359,11 @@ class GFHANNANSMS_Pro_Configurations {
                                                             </label>
 
                                                             <input type="text" name="gf_code_static"
-                                                                   id="hannansms_gf_code_static"
+                                                                   id="msmssms_gf_code_static"
                                                                    value="<?php echo isset( $config["meta"]["gf_code_static"] ) ? esc_attr( $config["meta"]["gf_code_static"] ) : ( isset( $settings["code"] ) ? $settings["code"] : '' ); ?>"
                                                                    style="direction:ltr !important; text-align:left;<?php echo isset( $config['meta'] ) && rgar( $config['meta'], 'gf_change_code_type' ) == 'dyn' ? 'display:none' : ''; ?>">
 
-                                                            <span id="hannansms_gf_code_dyn_div" <?php echo isset( $config['meta'] ) && rgar( $config['meta'], 'gf_change_code_type' ) == 'dyn' ? '' : 'style="display:none"'; ?>>
+                                                            <span id="msmssms_gf_code_dyn_div" <?php echo isset( $config['meta'] ) && rgar( $config['meta'], 'gf_change_code_type' ) == 'dyn' ? '' : 'style="display:none"'; ?>>
 																<?php
 																if ( ! empty( $_get_form_id ) ) {
 																	$form_meta = RGFormsModel::get_form_meta( $_get_form_id );
@@ -396,7 +396,7 @@ class GFHANNANSMS_Pro_Configurations {
 											<?php _e( "Admin Numbers", "GF_SMS" ); ?>
                                         </th>
                                         <td>
-                                            <input type="text" class="fieldwidth-1" name="gf_hannansms_to"
+                                            <input type="text" class="fieldwidth-1" name="gf_msmssms_to"
                                                    value="<?php echo isset( $config["meta"]["to"] ) ? esc_attr( $config["meta"]["to"] ) : ( isset( $settings["to"] ) ? $settings["to"] : '' ); ?>"
                                                    style="direction:ltr !important; text-align:left;">
                                             <span
@@ -409,15 +409,15 @@ class GFHANNANSMS_Pro_Configurations {
 											<?php _e( "Admin Message Body", "GF_SMS" ); ?>
                                         </th>
                                         <td>
-                                            <select id="gf_hannansms_message_variable_select"
-                                                    onchange="InsertVariable('gf_hannansms_message');">
+                                            <select id="gf_msmssms_message_variable_select"
+                                                    onchange="InsertVariable('gf_msmssms_message');">
 												<?php if ( ! empty( $_get_form_id ) ) {
 													$form_meta = RGFormsModel::get_form_meta( $_get_form_id );
 													echo ! empty( $form_meta ) ? self::get_form_fields_merge( $form_meta ) : '';
 												} ?>
                                             </select>
                                             <br/>
-                                            <textarea id="gf_hannansms_message" name="gf_hannansms_message"
+                                            <textarea id="gf_msmssms_message" name="gf_msmssms_message"
                                                       style="height: 150px; width:550px;"><?php echo rgget( "message", $config["meta"] ) ?></textarea>
                                         </td>
                                     </tr>
@@ -542,7 +542,7 @@ class GFHANNANSMS_Pro_Configurations {
                                         <th>
 											<?php _e( "Phone Number Mapping", "GF_SMS" ); ?>
                                         </th>
-                                        <td id="hannansms_customer_field">
+                                        <td id="msmssms_customer_field">
 											<?php
 											if ( ! empty( $_get_form_id ) ) {
 												$form_meta = RGFormsModel::get_form_meta( $_get_form_id );
@@ -556,7 +556,7 @@ class GFHANNANSMS_Pro_Configurations {
 											<?php _e( "Extra Numbers", "GF_SMS" ); ?>
                                         </th>
                                         <td>
-                                            <input type="text" class="fieldwidth-1" name="gf_hannansms_to_c"
+                                            <input type="text" class="fieldwidth-1" name="gf_msmssms_to_c"
                                                    value="<?php echo isset( $config["meta"]["to_c"] ) ? esc_attr( $config["meta"]["to_c"] ) : ''; ?>"
                                                    style="direction:ltr !important; text-align:left;">
 
@@ -570,8 +570,8 @@ class GFHANNANSMS_Pro_Configurations {
 											<?php _e( "User SMS Body", "GF_SMS" ); ?>
                                         </th>
                                         <td>
-                                            <select id="gf_hannansms_message_c_variable_select"
-                                                    onchange="InsertVariable('gf_hannansms_message_c');">
+                                            <select id="gf_msmssms_message_c_variable_select"
+                                                    onchange="InsertVariable('gf_msmssms_message_c');">
 												<?php
 												if ( ! empty( $_get_form_id ) ) {
 													$form_meta = RGFormsModel::get_form_meta( $_get_form_id );
@@ -580,7 +580,7 @@ class GFHANNANSMS_Pro_Configurations {
 												?>
                                             </select>
                                             <br/>
-                                            <textarea id="gf_hannansms_message_c" name="gf_hannansms_message_c"
+                                            <textarea id="gf_msmssms_message_c" name="gf_msmssms_message_c"
                                                       style="height: 150px; width:550px;"><?php echo rgget( "message_c", $config["meta"] ) ?></textarea>
                                         </td>
                                     </tr>
@@ -702,7 +702,7 @@ class GFHANNANSMS_Pro_Configurations {
                                     <tr>
                                         <td>
                                             <input type="submit" class="button-primary gfbutton"
-                                                   name="gf_hannansms_submit"
+                                                   name="gf_msmssms_submit"
                                                    value="<?php _e( "Update SMS Configuration", "GF_SMS" ); ?>"/>
                                         </td>
                                     </tr>
@@ -753,12 +753,12 @@ class GFHANNANSMS_Pro_Configurations {
 
                 $(document.body).on('click', 'input[name="gf_change_code_type"]', function () {
                     if ($('input[name="gf_change_code_type"]:checked').val() === 'dyn') {
-                        $("#hannansms_gf_code_dyn_div").show("slow");
-                        $("#hannansms_gf_code_static").hide("slow");
+                        $("#msmssms_gf_code_dyn_div").show("slow");
+                        $("#msmssms_gf_code_static").hide("slow");
                     }
                     else {
-                        $("#hannansms_gf_code_dyn_div").hide("slow");
-                        $("#hannansms_gf_code_static").show("slow");
+                        $("#msmssms_gf_code_dyn_div").hide("slow");
+                        $("#msmssms_gf_code_static").show("slow");
                     }
                 }).on('change', '.gf_adminsms_conditional_field_id', function () {
                     var id = $(this).attr('id');
@@ -841,13 +841,13 @@ class GFHANNANSMS_Pro_Configurations {
             //------------------------------------------------------------------------------
             function SelectFormAjax(formId) {
                 if (!formId) {
-                    jQuery("#hannansms_field_group").slideUp();
+                    jQuery("#msmssms_field_group").slideUp();
                 } else {
-                    jQuery("#hannansms_wait").show();
-                    jQuery("#hannansms_field_group").slideUp();
+                    jQuery("#msmssms_wait").show();
+                    jQuery("#msmssms_field_group").slideUp();
                     jQuery.post(ajaxurl, {
-                            action: "gf_select_hannansms_form",
-                            gf_select_hannansms_form: "<?php echo wp_create_nonce( "gf_select_hannansms_form" ) ?>",
+                            action: "gf_select_msmssms_form",
+                            gf_select_msmssms_form: "<?php echo wp_create_nonce( "gf_select_msmssms_form" ) ?>",
                             form_id: formId,
                             cookie: encodeURIComponent(document.cookie)
                         },
@@ -868,10 +868,10 @@ class GFHANNANSMS_Pro_Configurations {
                             jQuery("#gf_adminsms_conditional_enabled").attr('checked', false);
                             jQuery("#gf_clientsms_conditional_enabled").attr('checked', false);
 
-                            jQuery("#gf_hannansms_message_variable_select").html(fields);
-                            jQuery("#gf_hannansms_message_c_variable_select").html(fields);
-                            jQuery("#hannansms_customer_field").html(data["customer_field"]);
-                            jQuery("#hannansms_gf_code_dyn_div").html(data["gf_code"]);
+                            jQuery("#gf_msmssms_message_variable_select").html(fields);
+                            jQuery("#gf_msmssms_message_c_variable_select").html(fields);
+                            jQuery("#msmssms_customer_field").html(data["customer_field"]);
+                            jQuery("#msmssms_gf_code_dyn_div").html(data["gf_code"]);
 
                             var admin_div = jQuery(".gf_adminsms_conditional_div");
                             admin_div.first().replaceWith(admin_div.first()[0].outerHTML
@@ -891,8 +891,8 @@ class GFHANNANSMS_Pro_Configurations {
                             RefreshConditionRow("gf_adminsms_1__conditional", "", "is", "", 1);
                             RefreshConditionRow("gf_clientsms_1__conditional", "", "is", "", 1);
 
-                            jQuery("#hannansms_field_group").slideDown();
-                            jQuery("#hannansms_wait").hide();
+                            jQuery("#msmssms_field_group").slideDown();
+                            jQuery("#msmssms_wait").hide();
                         }, "json"
                     );
                 }
@@ -1108,7 +1108,7 @@ class GFHANNANSMS_Pro_Configurations {
                     new_query = GF_RemoveQuery("field_id", new_query);
                     var is_form_settings = new_query.indexOf("page=gf_edit_forms") >= 0 && new_query.indexOf("view=settings");
                     if (is_form_settings)
-                        new_query = "page=gf_hannansms&view=edit&id=" + id;
+                        new_query = "page=gf_msmssms&view=edit&id=" + id;
                     document.location = "?" + new_query;
                 }
             }
@@ -1143,7 +1143,7 @@ class GFHANNANSMS_Pro_Configurations {
 	}
 
 	public static function get_mapped_fields( $variable_name, $selected_field, $fields, $empty ) {
-		$field_name = "hannansms_" . $variable_name;
+		$field_name = "msmssms_" . $variable_name;
 		$str        = "<select name=\"$field_name\" id=\"$field_name\">";
 		$str        .= $empty == 'true' ? "<option value=\"\"></option>" : "";
 		foreach ( (array) $fields as $field ) {
@@ -1275,7 +1275,7 @@ class GFHANNANSMS_Pro_Configurations {
 	}
 
 	public static function select_forms_ajax() {
-		check_ajax_referer( "gf_select_hannansms_form", "gf_select_hannansms_form" );
+		check_ajax_referer( "gf_select_msmssms_form", "gf_select_msmssms_form" );
 		$form_id        = intval( rgpost( "form_id" ) );
 		$form           = RGFormsModel::get_form_meta( $form_id );
 		$fields         = self::get_form_fields_merge( $form );

@@ -1,58 +1,53 @@
-﻿=== Persian Gravity SMS Pro ===
-author: گرویتی فرم فارسی
-Contributors: persiangravityforms,melipayamak
-author URI: https://gravityforms.ir/
-plugin URI: https://gravityforms.ir/
-Tags: gravityforms,sms,gravity sms pro,پیامک گرویتی فرم,iran,گرویتی فرم فارسی,گرویتی فرم
-Requires at least: 5.0
-Tested up to: 5.3
+== Ippanel SMS Pro Gravity ==
+Tags: SMS ، Gravity ، Gravity Sms ، گراویتی اس ام اس ، گرویتی اس ام اس ، اس ام اس ، پیامک ، گرویتی ، گراویتی ،
+Donate link: https://ippanel.com/
+Requires at least: 5.0.3
+Tested up to: 5.3.2
+Requires PHP: 7.0
+Stable tag: 1.0
 License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-افزونه پیامک گرویتی فرم فارسی
-== Description ==
-**Persian Gravity Form SMS**
-افزونه پیامک گرویتی فرم فارسی
-قابلیت های افزونه پیامک گرویتی فرم:
+ارسال پیامک از طریق افزونه گرویتی و اطلاع رسانی به مدیران سایت و کاربران سایت
 
-*ارسال پیامک به مدیر (بی نهایت مدیر)
-*ارسال پیامک به کاربر
-*تایید شماره موبایل کاربر قبل از ثبت فرم
-*پشتیبانی از شورتکدهای فیلدهای گرویتی فرم
-*اضافه کردن فیلد خبرنامه افزونه WP-SMS به فیلدهای گرویتی فرم
-*پشتیبانی از منطق های شرطی جهت ارسال پیامک های مختلف وابسته به شروط مختلف
-*و سایر امکانات دیگری که در همین پست در بخش آموزش کار با افزونه قابل مشاهده خواهد بود.
-
-
-* در حال حاضر تنها وبسرویس [ملی پیامک](https://melipayamak.com) در این سیستم پشتیبانی می شود
-
-* با کد تخفیف gravity از ده درصد تخفیف ویژه ملی پیامک برخوردار شوید!
+==  Description ==
+<b><p>افزونه ارسال پیامک از طریق فرم های ساخته شده در  گرویتی فرم </p></b><br>
+<b><p> با استفاده از این افزونه شما می توانید قابلیت ارسال پیامک را به فرم های طراحی شده در افزونه گرویتی فرم اضافه نمایید.</p></b>
+<b><p> با استفاده از این افزونه شما می توانید به کاربر سایت و مدیر سایت پیامک ارسال کنید .</p></b>
+<b><p> ارسال کد اعتبار سنجی برای تاییده شماره موبایل در طراحی فرم امکان پذیر است</p></b>
+<b><p> با استفاده از این افزونه میتوانید مقدار های پیش فرض فرم طراحی شده استفاده کنید</p></b>
+<b><p> برای ارسال سریعتر پبامک به مدیر و کاربر سایت می توانید از پترن سامانه پیامکی استفاده نمایید  </p></b>
+<b><p> ارسال کد پیگیری یا شماره رهگیری به کاربر سایت از طریق این افزونه فراهم شده است</p></b>
+<b><p>پس از تکمیل فرم توسط کاربر، می توانید متن دلخواه خود را به صورت خودکار به کابر و مدیر سایت ، پیامک ارسال نمایید .</p></b>
 
 
-*  [راهنمای استفاده از افزونه](https://gravityforms.ir/9975/)
+<b>Ippanel SMS Plugin for WordPress and Gravity Form</b>
 
-= Compatibility =
-* Wordpress 5.x
+<p>With this plugin you can add the ability to send SMS to the forms designed in the Gravity Form extension.</p>
 
-= Support =
-*  [پاسخ به سوالات در انجمن پرشین اسکریپت](https://forum.persianscript.ir)
+<p>Once the form is completed by the user, you can automatically send your favorite text to the user and admin.</p>
 
 == Installation ==
-1. Upload `persian-gravity-sms-pro` folder to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
+1. Install Ippanel SMS Pro  extension on your WordPress CMS.
+3. Now, go to the setting section which is added to Gravity WordPress menu, choose "تنظیمات", then "تنظیمات پیامک" and enter your Ippanel gateway and the number you want to use when you're sending an SMS.
 
-== Frequently asked questions ==
+== Frequently Asked Questions ==
 
-= Where can I find more information and documentation about the plug-in? =
+برای استفاده از این افرونه باید حتما پنل پیامکی داشتنه باشیم؟
+بله ، برای ارسال پیامک نیاز به پنل پیامکی است که پنل پیامکی هم باید از سامانه ما دریافت شده باشد .
 
-You can read complete documentations on the [gravityforms.ir](https://gravityforms.ir)
+== Screenshots ==
+1. صفحه تنظیمات پنل پیامک
+2. صفحه فرم های طراحی شده
+3. امکان ارسال پیامک به مدیر سایت
+4. امکان ارسال پیامک به کاربر سایت 
 
 == Changelog ==
-= 1.0 =
-* first version
 
+= 1.0 =
+The first version provided
 
 == Upgrade Notice ==
+
 = 1.0 =
-* first version
-== Traducciones ==
-*  [پشتیبان گرویتی فرم](https://gravityforms.ir)
+اولین نسخه ارائه شده است و توضییح ندارد

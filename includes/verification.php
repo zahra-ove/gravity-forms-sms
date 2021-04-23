@@ -2,7 +2,7 @@
 	exit;
 }
 
-class GFHANNANSMS_Pro_Verification {
+class GFMSMSSMS_Pro_Verification {
 
 	public static function construct() {
 
@@ -166,7 +166,7 @@ class GFHANNANSMS_Pro_Verification {
 		if ( $field["type"] == "sms_verification" ) {
 
 			global $wpdb;
-			$verify_table = GFHANNANSMS_Pro_SQL::verify_table();
+			$verify_table = GFMSMSSMS_Pro_SQL::verify_table();
 			$form_id      = $form['id'];
 
 			$mobile_field_id = rgar( $field, "field_sms_verify_mobile" );
@@ -225,9 +225,9 @@ class GFHANNANSMS_Pro_Verification {
 
 					if ( $try_num <= $allowed_try && ! rgempty( 'input_' . $field["id"] ) && ! empty( $code ) && rgpost( 'input_' . str_replace( '.', '_', $field["id"] ) ) == $code ) {
 						if ( ! empty( $ID ) && $ID != 0 ) {
-							GFHANNANSMS_Pro_SQL::update_verify( $ID, $new_try_num, $sent_num, 0, 1 );
+							GFMSMSSMS_Pro_SQL::update_verify( $ID, $new_try_num, $sent_num, 0, 1 );
 						} else {
-							GFHANNANSMS_Pro_SQL::insert_verify( $form_id, 0, $mobile, $code, 1, $new_try_num, $sent_num );
+							GFMSMSSMS_Pro_SQL::insert_verify( $form_id, 0, $mobile, $code, 1, $new_try_num, $sent_num );
 						}
 					} else if ( ( $status != 1 && $status != '1' ) || empty( $status ) || $status == 0 ) {
 
@@ -258,25 +258,25 @@ class GFHANNANSMS_Pro_Verification {
 
 									if ( $sent_num <= $allowed_send ) {
 
-										if ( GFHANNANSMS_Form_Send::Send( $mobile, $message, $from = '', $form_id, '', $code ) == 'OK' ) {
+										if ( GFMSMSSMS_Form_Send::Send( $mobile, $message, $from = '', $form_id, '', $code ) == 'OK' ) {
 											$sent_num = $sent_num + 1;
 
-											GFHANNANSMS_Pro_SQL::update_verify( $ID, $try_num, $sent_num, 0, 0 );
+											GFMSMSSMS_Pro_SQL::update_verify( $ID, $try_num, $sent_num, 0, 0 );
 
 											$result["message"] = __( "The activation code was sent again via SMS.", "GF_SMS" );
 										}
 									}
 								} else if ( ! rgempty( 'input_' . $field["id"] ) ) {
 
-									GFHANNANSMS_Pro_SQL::update_verify( $ID, $new_try_num, $sent_num, 0, 0 );
+									GFMSMSSMS_Pro_SQL::update_verify( $ID, $new_try_num, $sent_num, 0, 0 );
 
 									$result["message"] = __( "The entered code is incorrect.", "GF_SMS" );
 								}
 
 							} else {
-								if ( GFHANNANSMS_Form_Send::Send( $mobile, $message, $from = '', $form_id, '', $code ) ) {
+								if ( GFMSMSSMS_Form_Send::Send( $mobile, $message, $from = '', $form_id, '', $code ) ) {
 									$sent_num = $sent_num + 1;
-									GFHANNANSMS_Pro_SQL::insert_verify( $form_id, 0, $mobile, $code, 0, $try_num, $sent_num );
+									GFMSMSSMS_Pro_SQL::insert_verify( $form_id, 0, $mobile, $code, 0, $try_num, $sent_num );
 								} else {
 									$result["message"] = __( "Sending the message encountered an error.", "GF_SMS" );
 								}
@@ -285,7 +285,7 @@ class GFHANNANSMS_Pro_Verification {
 						} else {
 
 							if ( ! empty( $ID ) && $ID != 0 ) {
-								GFHANNANSMS_Pro_SQL::update_verify( $ID, $new_try_num, $sent_num, 0, 0 );
+								GFMSMSSMS_Pro_SQL::update_verify( $ID, $new_try_num, $sent_num, 0, 0 );
 							}
 							$show_input        = false;
 							$result["message"] = __( "You have maxed out of the number of times you are allowed to verify your mobile number for this form.", "GF_SMS" );
@@ -327,7 +327,7 @@ class GFHANNANSMS_Pro_Verification {
 		foreach ( (array) $sms_verification as $field ) {
 
 			global $wpdb;
-			$verify_table = GFHANNANSMS_Pro_SQL::verify_table();
+			$verify_table = GFMSMSSMS_Pro_SQL::verify_table();
 
 			$field = (array) $field;
 
@@ -344,11 +344,11 @@ class GFHANNANSMS_Pro_Verification {
 
 					$verify_code = $entry[ $field['id'] ] = $get_result->code;
 
-					GFHANNANSMS_Pro_SQL::update_entry_verify_sent( $form['id'], $entry['id'], $verify_code );
+					GFMSMSSMS_Pro_SQL::update_entry_verify_sent( $form['id'], $entry['id'], $verify_code );
 
 					$try_num  = $get_result->try_num;
 					$sent_num = $get_result->sent_num;
-					GFHANNANSMS_Pro_SQL::update_verify( $ID, $try_num, $sent_num, $entry['id'], 1 );
+					GFMSMSSMS_Pro_SQL::update_verify( $ID, $try_num, $sent_num, $entry['id'], 1 );
 
 					GFAPI::update_entry_field( $entry['id'], $field['id'], $verify_code );
 				}
@@ -368,7 +368,7 @@ class GFHANNANSMS_Pro_Verification {
 	}
 
 	public static function js() {
-		$settings = GFHANNANSMS_Pro::get_option();
+		$settings = GFMSMSSMS_Pro::get_option();
 		?>
         <script type='text/javascript'>
             fieldSettings["sms_verification"] = ".label_setting, .placeholder_setting,.label_placement_setting, .conditional_logic_field_setting, .admin_label_setting, .size_setting, .default_value_setting, .css_class_setting, .sms_verification_setting";
@@ -678,7 +678,7 @@ class GFHANNANSMS_Pro_Verification {
 		$mobile = "input_{$mobile}";
 		$mobile = ! rgempty( $mobile ) ? sanitize_text_field( rgpost( $mobile ) ) : '';
 		if ( $change && ! empty( $mobile ) ) {
-			$mobile = GFHANNANSMS_Form_Send::change_mobile_separately( $mobile, self::country_code( $field ) );
+			$mobile = GFMSMSSMS_Form_Send::change_mobile_separately( $mobile, self::country_code( $field ) );
 		}
 
 		return $mobile;
@@ -687,7 +687,7 @@ class GFHANNANSMS_Pro_Verification {
 	public static function white_list( $field ) {
 		$field      = (array) $field;
 		$numbers    = rgar( $field, "sms_verify_code_white_list" );
-		$white_list = GFHANNANSMS_Form_Send::change_mobile( $numbers, self::country_code( $field ) );
+		$white_list = GFMSMSSMS_Form_Send::change_mobile( $numbers, self::country_code( $field ) );
 
 		return ! empty( $white_list ) ? explode( ',', $white_list ) : array();
 	}
